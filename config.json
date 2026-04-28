@@ -12,7 +12,7 @@
       "id": "skill-to-succeed",
       "title": "KỸ NĂNG THÀNH CÔNG",
       "titleEn": "SKILL TO SUCCED",
-      "description": "Chứng chỉ hoàn thành khóa đào tạo trực tuyến về kỹ năng mềm, tư duy tích cực và phát triển bản thân.",
+      "description": "Chứng chỉ hoàn thành khóa đào tạo trực tuyến về kỹ năng mềm, tư duy tích cực và phát triển bản thân. Cần tối thiểu 4 tiếng để hoàn thành!",
       "badge": null,
       "color": "#D11000",
       "isNew": true,
@@ -21,6 +21,21 @@
       "image": "sts.png",
       "imageSize": { "width": 110, "height": 110 },
       "soon": false,
+      "releaseDate": null
+    },
+    {
+      "id": "green-minset",
+      "title": "TƯ DUY XANH",
+      "titleEn": "GREEN MINSET",
+      "description": "Chứng chỉ hoàn thành khóa đào tạo trực tuyến về kỹ năng mềm, tư duy tích cực và phát triển bản thân.",
+      "badge": null,
+      "color": "#D11000",
+      "isNew": true,
+      "accessExpiry": "2026-06-15",
+      "url": "https://atnoob303.github.io/Edit-CERTIFICATE-TCTKDHK24G-PROJECT/Greenmindset",
+      "image": "sts.png",
+      "imageSize": { "width": 110, "height": 110 },
+      "soon": true,
       "releaseDate": null
     },
     {

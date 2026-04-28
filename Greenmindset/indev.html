@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chứng chỉ Save the Children — Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
+<script src="https://unpkg.com/downloadjs@1.4.7/download.js"></script>
+<style>
+/* ═══════════════ RESET + TOKENS ═══════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#D11000;
+  --red2:#ff3322;
+  --dark:#111418;
+  --dark2:#1a1f28;
+  --dark3:#252c38;
+  --bg:#edecea;
+  --card:#ffffff;
+  --border:#dedad3;
+  --border2:#c8c3bb;
+  --text:#0f1117;
+  --text2:#2d3340;
+  --muted:#717680;
+  --muted2:#a0a6b0;
+  --radius:16px;
+  --tr:.22s cubic-bezier(.4,0,.2,1);
+  --tr-slow:.38s cubic-bezier(.4,0,.2,1);
+  --sidebar:340px;
+}
+html{color-scheme:light}
+body{
+  font-family:'Be Vietnam Pro',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ═══════════════ HEADER ═══════════════ */
+header{
+  background:rgba(17,20,24,.97);
+  padding:0 36px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:62px;position:sticky;top:0;z-index:200;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  box-shadow:0 2px 30px rgba(0,0,0,.4);
+  backdrop-filter:blur(20px);
+}
+.header-left{display:flex;align-items:center;gap:13px}
+.logo-mark{
+  width:38px;height:38px;
+  background:linear-gradient(135deg,#e81000,#a50c00);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;color:#fff;flex-shrink:0;
+  box-shadow:0 3px 14px rgba(209,16,0,.5);
+  transition:transform var(--tr),box-shadow var(--tr);
+  position:relative;overflow:hidden;cursor:default;
+}
+.logo-mark::before{
+  content:'';position:absolute;top:0;left:-80%;width:55%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+  transform:skewX(-18deg);transition:left .5s ease;pointer-events:none;
+}
+.logo-mark:hover::before{left:140%}
+.logo-mark::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(255,255,255,.28) 0%,transparent 55%);
+  border-radius:10px;pointer-events:none;
+}
+.logo-mark svg{width:22px;height:22px;position:relative;z-index:1}
+.logo-mark:hover{transform:scale(1.1) rotate(-5deg);box-shadow:0 6px 24px rgba(209,16,0,.65)}
+.header-titles h1{font-size:14px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-.01em}
+.header-titles p{font-size:10.5px;color:rgba(255,255,255,.35);margin-top:1px;font-weight:400}
+.header-right{display:flex;align-items:center;gap:8px}
+.btn-back{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 16px;border-radius:9px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.7);
+  font-family:inherit;font-size:12px;font-weight:600;
+  cursor:pointer;text-decoration:none;
+  transition:all var(--tr);letter-spacing:.01em;
+}
+.btn-back:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#fff;transform:translateX(-2px)}
+.btn-back svg{width:14px;height:14px;flex-shrink:0}
+.header-badge{
+  font-size:10px;font-weight:700;
+  background:rgba(209,16,0,.2);border:1px solid rgba(209,16,0,.35);
+  color:#f87060;padding:3px 10px;border-radius:20px;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+
+/* ═══════════════ HERO ═══════════════ */
+.hero{
+  background:linear-gradient(135deg,#111418 0%,#1c2436 55%,#111418 100%);
+  padding:38px 40px 34px;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-80px;right:-60px;
+  width:360px;height:360px;
+  background:radial-gradient(circle,rgba(209,16,0,.2) 0%,transparent 70%);
+  border-radius:50%;animation:glowPulse 4s ease-in-out infinite;
+}
+.hero::after{
+  content:'';position:absolute;bottom:-100px;left:-50px;
+  width:280px;height:280px;
+  background:radial-gradient(circle,rgba(209,16,0,.08) 0%,transparent 70%);
+  border-radius:50%;animation:glowPulse 4s ease-in-out infinite reverse;
+}
+@keyframes glowPulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;
+}
+.hero-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.hero-text{}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(209,16,0,.14);border:1px solid rgba(209,16,0,.32);
+  color:#f87060;font-size:10px;font-weight:700;
+  padding:4px 14px;border-radius:20px;margin-bottom:14px;
+  letter-spacing:.08em;text-transform:uppercase;
+  backdrop-filter:blur(8px);
+  box-shadow:0 0 20px rgba(209,16,0,.15),inset 0 1px 0 rgba(255,255,255,.1);
+  position:relative;overflow:hidden;
+}
+.hero-badge::before{
+  content:'';position:absolute;top:0;left:-70%;width:45%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
+  animation:badgeSweep 3.8s ease-in-out infinite;pointer-events:none;
+}
+@keyframes badgeSweep{0%,100%{left:-70%}55%{left:140%}}
+.hero h2{font-size:28px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-.02em}
+.hero h2 span{
+  background:linear-gradient(90deg,#ff6050,#ff2010,#D11000);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 16px rgba(209,16,0,.5));
+}
+.hero p{font-size:12.5px;color:rgba(255,255,255,.38);margin-top:8px;font-weight:300;line-height:1.7}
+.hero-stats{
+  display:flex;gap:0;
+  border:1px solid rgba(255,255,255,.1);border-radius:14px;
+  overflow:hidden;background:rgba(255,255,255,.04);
+  backdrop-filter:blur(16px);
+  box-shadow:0 4px 30px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.08);
+  flex-shrink:0;
+}
+.hstat{padding:14px 26px;text-align:center}
+.hstat+.hstat{border-left:1px solid rgba(255,255,255,.07)}
+.hstat .num{font-size:22px;font-weight:800;color:#fff;display:block;letter-spacing:-.02em}
+.hstat .lbl{font-size:9.5px;color:rgba(255,255,255,.3);margin-top:3px;font-weight:400;letter-spacing:.04em;text-transform:uppercase}
+
+/* ═══════════════ MAIN LAYOUT ═══════════════ */
+.app-body{
+  flex:1;display:flex;
+  max-width:1280px;width:100%;margin:0 auto;
+  padding:28px 36px;gap:24px;align-items:flex-start;
+}
+
+/* ═══════════════ SIDEBAR ═══════════════ */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  display:flex;flex-direction:column;gap:14px;
+  position:sticky;top:78px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:0 1px 3px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.06);
+  overflow:hidden;
+}
+.card-head{
+  padding:14px 18px 12px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:9px;
+  background:linear-gradient(to bottom,#faf9f8,#fff);
+}
+.card-head-icon{
+  width:28px;height:28px;border-radius:8px;
+  background:var(--dark);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.card-head-icon svg{width:14px;height:14px}
+.card-head-title{font-size:12px;font-weight:700;color:var(--text);letter-spacing:-.01em}
+.card-head-sub{font-size:10px;color:var(--muted);margin-top:1px;font-weight:400}
+.card-body-pad{padding:16px 18px}
+
+/* Field */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.field:last-child{margin-bottom:0}
+.field label{font-size:12px;font-weight:600;color:var(--text2)}
+.field input[type=text],.field input[type=date]{
+  width:100%;height:38px;padding:0 12px;
+  border:1.5px solid var(--border);border-radius:9px;
+  font-family:'Be Vietnam Pro',sans-serif;font-size:13px;
+  background:#faf9f8;color:var(--text);outline:none;
+  transition:border-color var(--tr),box-shadow var(--tr),background var(--tr);
+}
+.field input:focus{border-color:var(--dark);background:#fff;box-shadow:0 0 0 3px rgba(17,20,24,.06)}
+.field-hint{font-size:10.5px;color:var(--muted2);font-weight:400}
+
+/* Name preview badge */
+.name-preview{
+  background:linear-gradient(135deg,#fff5f5,#fff0ef);
+  border:1.5px solid rgba(209,16,0,.18);
+  border-radius:10px;padding:11px 14px;
+  font-size:16px;font-weight:800;
+  color:var(--red);font-style:italic;
+  letter-spacing:.06em;min-height:44px;
+  word-break:break-word;
+  text-shadow:0 0 30px rgba(209,16,0,.15);
+  transition:all var(--tr);
+}
+.name-preview.has-text{box-shadow:0 2px 12px rgba(209,16,0,.08)}
+
+/* Status message */
+.status-msg{
+  font-size:11.5px;text-align:center;
+  padding:7px 12px;border-radius:8px;
+  min-height:30px;display:flex;align-items:center;justify-content:center;
+  gap:6px;font-weight:500;
+  transition:all var(--tr);
+}
+.status-msg.idle{background:transparent;color:transparent}
+.status-msg.loading{background:#f0f4ff;color:#4060c0}
+.status-msg.ok{background:#f0fdf4;color:#16a34a}
+.status-msg.err{background:#fff5f5;color:var(--red)}
+
+/* Action buttons */
+.btn-group{display:flex;flex-direction:column;gap:8px}
+.btn{
+  width:100%;padding:10px 16px;border:none;border-radius:10px;
+  font-family:'Be Vietnam Pro',sans-serif;font-size:12.5px;font-weight:700;
+  cursor:pointer;transition:all var(--tr);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  letter-spacing:.01em;position:relative;overflow:hidden;
+}
+.btn::after{
+  content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+  transform:skewX(-18deg);transition:left 0s;pointer-events:none;
+  opacity:0;
+}
+.btn:hover::after{left:140%;transition:left .45s ease;opacity:1}
+.btn svg{width:15px;height:15px;flex-shrink:0}
+.btn-preview{
+  background:linear-gradient(135deg,var(--dark2),var(--dark));
+  color:#fff;
+  box-shadow:0 2px 12px rgba(17,20,24,.3);
+}
+.btn-preview:hover{background:linear-gradient(135deg,var(--dark3),var(--dark2));box-shadow:0 4px 20px rgba(17,20,24,.4);transform:translateY(-1px)}
+.btn-preview:active{transform:scale(.96)}
+.btn-pdf{
+  background:linear-gradient(135deg,#e81000,var(--red));
+  color:#fff;
+  box-shadow:0 2px 12px rgba(209,16,0,.3);
+}
+.btn-pdf:hover{background:linear-gradient(135deg,#ff2010,#e81000);box-shadow:0 4px 20px rgba(209,16,0,.45);transform:translateY(-1px)}
+.btn-pdf:active{transform:scale(.96)}
+.btn-png{
+  background:#fff;color:var(--text);
+  border:1.5px solid var(--border);
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.btn-png:hover{border-color:var(--border2);background:#faf9f8;box-shadow:0 3px 12px rgba(0,0,0,.1);transform:translateY(-1px)}
+.btn-png:active{transform:scale(.96)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+/* ═══════════════ PREVIEW AREA ═══════════════ */
+.preview-area{
+  flex:1;min-width:0;
+  display:flex;flex-direction:column;gap:16px;
+}
+.preview-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,0,0,.05),0 4px 24px rgba(0,0,0,.08);
+  min-height:500px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.preview-header{
+  position:absolute;top:0;left:0;right:0;
+  padding:11px 16px;
+  background:rgba(255,255,255,.9);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  z-index:10;
+}
+.preview-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.preview-name-tag{
+  font-size:11px;font-weight:600;color:var(--red);
+  background:rgba(209,16,0,.08);border:1px solid rgba(209,16,0,.15);
+  padding:3px 10px;border-radius:20px;
+}
+.placeholder{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:14px;
+  padding:60px 40px;color:var(--muted2);
+}
+.placeholder-icon{
+  width:72px;height:72px;
+  background:linear-gradient(135deg,#f5f4f2,#ede9e3);
+  border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+}
+.placeholder-icon svg{width:32px;height:32px;opacity:.4}
+.placeholder h3{font-size:15px;font-weight:700;color:var(--text2)}
+.placeholder p{font-size:12.5px;color:var(--muted);text-align:center;line-height:1.7}
+.placeholder kbd{
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:5px;padding:2px 7px;font-size:11px;
+  font-family:monospace;color:var(--text2);
+}
+#pdfFrame{
+  display:none;width:100%;
+  aspect-ratio:1.414/1;
+  border:none;padding-top:42px;
+}
+/* Loading overlay */
+.loading-overlay{
+  display:none;position:absolute;inset:0;
+  background:rgba(237,236,234,.85);
+  backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;
+  flex-direction:column;gap:14px;
+  z-index:20;border-radius:var(--radius);
+}
+.loading-overlay.on{display:flex}
+.spin-ring{
+  width:44px;height:44px;
+  border:3px solid rgba(209,16,0,.15);
+  border-top-color:var(--red);
+  border-radius:50%;
+  animation:spin .75s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay p{font-size:13px;font-weight:600;color:var(--text2)}
+.loading-overlay small{font-size:11px;color:var(--muted)}
+
+/* Toast */
+#toast{
+  position:fixed;bottom:28px;right:28px;z-index:9999;
+  background:var(--dark);color:#fff;
+  padding:12px 20px;border-radius:12px;
+  font-size:13px;font-weight:600;
+  box-shadow:0 8px 32px rgba(0,0,0,.25);
+  transform:translateY(20px);opacity:0;
+  transition:all var(--tr-slow);pointer-events:none;
+}
+#toast.show{transform:translateY(0);opacity:1}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media(max-width:780px){
+  header{padding:0 16px}
+  .hero{padding:28px 20px 24px}
+  .hero h2{font-size:22px}
+  .hero-stats{display:none}
+  .app-body{flex-direction:column;padding:20px 16px;gap:16px}
+  .sidebar{width:100%;position:static}
+  :root{--sidebar:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none">
+        <ellipse cx="12" cy="9" rx="5" ry="6" fill="rgba(255,255,255,.9)"/>
+        <ellipse cx="12" cy="8.5" rx="3" ry="3.8" fill="#D11000"/>
+        <path d="M6.5 15Q12 20 17.5 15" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <div class="header-titles">
+      <h1>Save the Children — Certificate Editor</h1>
+      <p>Chỉnh sửa tên &amp; ngày · Xuất PDF &amp; PNG · Chạy hoàn toàn trên trình duyệt</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="header-badge">🎓 Certificate System</span>
+    <a class="btn-back" href="https://atnoob303.github.io/Edit-CERTIFICATE-TCTKDHK24G-PROJECT/" title="Về trang chủ">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Trang chủ
+    </a>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge">✦ Save the Children · TKDHK24G</div>
+      <h2>Cấp phát <span>Chứng chỉ</span><br>Hoàn thành Khóa học</h2>
+      <p>Nhập tên người nhận · Chọn ngày cấp · Xem trước trực tiếp · Tải về PDF hoặc PNG</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat">
+        <span class="num">100%</span>
+        <div class="lbl">Trình duyệt</div>
+      </div>
+      <div class="hstat">
+        <span class="num">2</span>
+        <div class="lbl">Định dạng</div>
+      </div>
+      <div class="hstat">
+        <span class="num">0s</span>
+        <div class="lbl">Server wait</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP BODY -->
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- Recipient info -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-head-icon">
+          <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#fff" stroke-width="1.4"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <div class="card-head-title">Thông tin người nhận</div>
+          <div class="card-head-sub">Họ tên &amp; ngày cấp chứng chỉ</div>
+        </div>
+      </div>
+      <div class="card-body-pad">
+        <div class="field">
+          <label for="nameInput">Họ và tên</label>
+          <input type="text" id="nameInput" placeholder="Nhập họ và tên đầy đủ..." autocomplete="off">
+          <span class="field-hint">Tự động in hoa · Font FreeMonoOblique đỏ #D11000</span>
+        </div>
+        <div class="field">
+          <label>Xem trước tên trên chứng chỉ</label>
+          <div class="name-preview" id="nameBadge">—</div>
+        </div>
+        <div class="field" style="margin-top:4px">
+          <label for="dateInput">Ngày cấp</label>
+          <input type="date" id="dateInput">
+          <span class="field-hint">Mặc định: ngày hôm nay</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-head-icon">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3M2 13h12" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="card-head-title">Xuất chứng chỉ</div>
+          <div class="card-head-sub">PDF vector · PNG hình ảnh</div>
+        </div>
+      </div>
+      <div class="card-body-pad">
+        <div class="btn-group">
+          <button class="btn btn-preview" id="btnPreview" onclick="doPreview()">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="#fff" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="#fff"/></svg>
+            Xem trước PDF
+          </button>
+          <button class="btn btn-pdf" id="btnPdf" onclick="doDownloadPdf()" disabled>
+            <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="10" height="13" rx="1.5" stroke="#fff" stroke-width="1.4"/><path d="M5 5h6M5 8h6M5 11h4" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/><path d="M10 1v4h4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tải về PDF
+          </button>
+          <button class="btn btn-png" id="btnPng" onclick="doDownloadPng()" disabled>
+            <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="12" rx="2" stroke="#333" stroke-width="1.4"/><circle cx="5.5" cy="6.5" r="1.5" fill="#999"/><path d="M1 11l4-4 3 3 2-2 5 5" stroke="#bbb" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tải về PNG
+          </button>
+        </div>
+        <div class="status-msg idle" id="statusMsg">—</div>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="card">
+      <div class="card-body-pad" style="padding:14px 18px">
+        <div style="font-size:11px;color:var(--muted);line-height:1.8">
+          <div style="font-weight:700;color:var(--text2);margin-bottom:6px;font-size:11.5px">ℹ️ Hướng dẫn</div>
+          Đặt file <code style="background:var(--bg);padding:1px 5px;border-radius:4px;font-size:10.5px">pdf_b64.txt</code> và <code style="background:var(--bg);padding:1px 5px;border-radius:4px;font-size:10.5px">font_b64.txt</code> cùng thư mục với file HTML này.<br><br>
+          Hệ thống sẽ tự động tải khi mở trang.
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- PREVIEW -->
+  <div class="preview-area">
+    <div class="preview-card" id="previewCard">
+      <div class="preview-header">
+        <span class="preview-label">📄 Xem trước chứng chỉ</span>
+        <span class="preview-name-tag" id="previewNameTag" style="display:none"></span>
+      </div>
+      <div class="placeholder" id="placeholder">
+        <div class="placeholder-icon">
+          <svg viewBox="0 0 48 48" fill="none"><rect x="6" y="4" width="32" height="40" rx="3" stroke="#999" stroke-width="2"/><path d="M14 16h20M14 22h20M14 28h14" stroke="#bbb" stroke-width="2" stroke-linecap="round"/><circle cx="38" cy="38" r="8" fill="#f0ede8" stroke="#ddd" stroke-width="1.5"/><path d="M34 38l3 3 5-5" stroke="#aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Chưa có xem trước</h3>
+        <p>Nhập họ tên người nhận rồi bấm<br><strong>Xem trước PDF</strong> để tạo chứng chỉ</p>
+      </div>
+      <iframe id="pdfFrame" title="Xem trước chứng chỉ"></iframe>
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="spin-ring"></div>
+        <p>Đang tạo chứng chỉ...</p>
+        <small>Vui lòng đợi trong giây lát</small>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── Config: tên 2 file txt (đặt cùng thư mục với HTML này) ──
+const PDF_TXT_FILE  = "pdf_b64.txt";
+const FONT_TXT_FILE = "font_b64.txt";
+
+// ── PDF coordinates (points) ──
+const PAGE_W = 1417.32, PAGE_H = 1000.63;
+const NAME_ZONE = { x: 215, y: 390, w: 520, h: 78 };
+const DATE_X = 751, DATE_Y = 205;
+
+let PDF_B64 = null, FONT_B64 = null;
+let lastPdfBytes = null;
+let assetsLoaded = false;
+
+// ── Load assets on startup ──
+async function loadAssets() {
+  setStatus("Đang tải dữ liệu...", "loading");
+  try {
+    const [pr, fr] = await Promise.all([
+      fetch(PDF_TXT_FILE + "?t=" + Date.now()),
+      fetch(FONT_TXT_FILE + "?t=" + Date.now())
+    ]);
+    if (!pr.ok) throw new Error(`Không tìm thấy ${PDF_TXT_FILE} (HTTP ${pr.status})`);
+    if (!fr.ok) throw new Error(`Không tìm thấy ${FONT_TXT_FILE} (HTTP ${fr.status})`);
+    PDF_B64  = (await pr.text()).replace(/\s/g, "");
+    FONT_B64 = (await fr.text()).replace(/\s/g, "");
+    assetsLoaded = true;
+    setStatus("✓ Sẵn sàng tạo chứng chỉ", "ok");
+    setTimeout(() => setStatus("", "idle"), 2500);
+  } catch(e) {
+    setStatus("⚠ " + e.message, "err");
+    showToast("❌ " + e.message);
+  }
+}
+
+function b64ToUint8(b64) {
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return arr;
+}
+
+function makeDateStr(dateStr) {
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const d = dateStr ? new Date(dateStr + "T12:00:00") : new Date();
+  const day = d.getDate();
+  const sfx = [11,12,13].includes(day) ? "th" : ({1:"st",2:"nd",3:"rd"}[day%10]||"th");
+  return months[d.getMonth()] + " " + day + sfx + ", " + d.getFullYear();
+}
+
+// Set today date
+document.getElementById("dateInput").value = new Date().toISOString().split("T")[0];
+
+// Name preview live update
+document.getElementById("nameInput").addEventListener("input", function() {
+  const v = this.value.trim().toUpperCase();
+  const badge = document.getElementById("nameBadge");
+  badge.textContent = v || "—";
+  badge.classList.toggle("has-text", !!v);
+  document.getElementById("btnPdf").disabled = true;
+  document.getElementById("btnPng").disabled = true;
+  lastPdfBytes = null;
+});
+
+document.getElementById("nameInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") doPreview();
+});
+
+function setLoading(on) {
+  document.getElementById("loadingOverlay").classList.toggle("on", on);
+  document.getElementById("btnPreview").disabled = on;
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById("statusMsg");
+  el.textContent = msg;
+  el.className = "status-msg " + (type || "idle");
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove("show"), 2800);
+}
+
+async function buildPdf() {
+  if (!assetsLoaded) throw new Error("Dữ liệu chưa sẵn sàng. Vui lòng đợi.");
+  const { PDFDocument, rgb, StandardFonts } = PDFLib;
+  const name = document.getElementById("nameInput").value.trim().toUpperCase();
+  const dateStr = document.getElementById("dateInput").value;
+
+  const pdfDoc = await PDFDocument.load(b64ToUint8(PDF_B64));
+  pdfDoc.registerFontkit(fontkit);
+  const customFont = await pdfDoc.embedFont(b64ToUint8(FONT_B64));
+  const helvetica  = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+  const page = pdfDoc.getPages()[0];
+  const nameColor = rgb(209/255, 16/255, 0/255);
+
+  // Auto-shrink font to fit zone
+  let fontSize = 60;
+  const maxWidth = NAME_ZONE.w - 10;
+  while (fontSize > 20) {
+    if (customFont.widthOfTextAtSize(name, fontSize) <= maxWidth) break;
+    fontSize--;
+  }
+  const textW = customFont.widthOfTextAtSize(name, fontSize);
+  const startX = NAME_ZONE.x + (NAME_ZONE.w - textW) / 2;
+
+  page.drawText(name, { x: startX, y: NAME_ZONE.y, font: customFont, size: fontSize, color: nameColor });
+  page.drawText(makeDateStr(dateStr), { x: DATE_X, y: DATE_Y, font: helvetica, size: 25, color: rgb(0,0,0) });
+
+  return await pdfDoc.save();
+}
+
+async function doPreview() {
+  const name = document.getElementById("nameInput").value.trim();
+  if (!name) { setStatus("⚠ Vui lòng nhập họ và tên!", "err"); document.getElementById("nameInput").focus(); return; }
+  if (!assetsLoaded) { setStatus("⚠ Dữ liệu chưa sẵn sàng", "err"); return; }
+
+  setLoading(true); setStatus("Đang tạo chứng chỉ...", "loading");
+  try {
+    const bytes = await buildPdf();
+    lastPdfBytes = bytes;
+
+    const blob = new Blob([bytes], { type: "application/pdf" });
+    const url  = URL.createObjectURL(blob);
+    const frame = document.getElementById("pdfFrame");
+    frame.src = url + "#toolbar=0&navpanes=0&scrollbar=0";
+    frame.style.display = "block";
+    document.getElementById("placeholder").style.display = "none";
+
+    // Show name tag in preview header
+    const tag = document.getElementById("previewNameTag");
+    tag.textContent = name.toUpperCase();
+    tag.style.display = "inline-flex";
+
+    document.getElementById("btnPdf").disabled = false;
+    document.getElementById("btnPng").disabled = false;
+    setStatus("✓ Xem trước thành công!", "ok");
+    showToast("✅ Chứng chỉ đã được tạo!");
+  } catch(e) {
+    setStatus("❌ " + e.message, "err");
+    showToast("❌ Lỗi: " + e.message);
+    console.error(e);
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function doDownloadPdf() {
+  const name = document.getElementById("nameInput").value.trim();
+  if (!name) return;
+  setStatus("Đang xuất PDF...", "loading");
+  try {
+    const bytes = lastPdfBytes || await buildPdf();
+    const safe = name.replace(/\s+/g,"_").replace(/[^\w_]/g,"_");
+    download(new Blob([bytes], { type:"application/pdf" }), "chung_chi_" + safe + ".pdf", "application/pdf");
+    setStatus("✓ Đã tải PDF!", "ok");
+    showToast("📄 Đã tải về PDF!");
+    setTimeout(() => setStatus("", "idle"), 2500);
+  } catch(e) {
+    setStatus("❌ " + e.message, "err");
+  }
+}
+
+async function doDownloadPng() {
+  const name = document.getElementById("nameInput").value.trim();
+  if (!name || !lastPdfBytes) { setStatus("⚠ Hãy xem trước trước!", "err"); return; }
+  setStatus("Đang xuất PNG...", "loading");
+  try {
+    // Render PDF page to canvas via PDF.js CDN
+    const script = document.createElement("script");
+    script.src = "https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js";
+    document.head.appendChild(script);
+    await new Promise((res, rej) => { script.onload = res; script.onerror = rej; });
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+    const loadingTask = pdfjsLib.getDocument({ data: lastPdfBytes });
+    const pdf = await loadingTask.promise;
+    const page = await pdf.getPage(1);
+
+    const scale = 3; // high-res PNG
+    const viewport = page.getViewport({ scale });
+    const canvas = document.createElement("canvas");
+    canvas.width  = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext("2d");
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    canvas.toBlob(blob => {
+      const safe = name.replace(/\s+/g,"_").replace(/[^\w_]/g,"_");
+      download(blob, "chung_chi_" + safe + ".png", "image/png");
+      setStatus("✓ Đã tải PNG!", "ok");
+      showToast("🖼 Đã tải về PNG!");
+      setTimeout(() => setStatus("", "idle"), 2500);
+    }, "image/png", 0.97);
+  } catch(e) {
+    setStatus("❌ " + e.message, "err");
+    showToast("❌ PNG thất bại: " + e.message);
+    console.error(e);
+  }
+}
+
+// Init
+loadAssets();
+</script>
+</body>
+</html>

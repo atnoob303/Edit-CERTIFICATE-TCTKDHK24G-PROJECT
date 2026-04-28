@@ -658,11 +658,13 @@ function renderCard(c, q=''){
   const locked   = !canOpen;
   const hasImg   = !!c.image;
 
+  // visual "soon": soon=true AND chưa đến ngày — giữ hiệu ứng đơn sắc + COMING SOON badge
+  const isVisualSoon = isSoon && hasCd;
+
   const badgeNew  = c.isNew && !hasImg ? '<div class="badge-new">NEW</div>' : '';
-  // COMING SOON badge: only when soon=true
-  const badgeSoon = isSoon && !canOpen
+  // COMING SOON badge: dựa vào soon + chưa đến ngày, không phụ thuộc canOpen
+  const badgeSoon = isVisualSoon
     ? '<div class="badge-soon">COMING SOON</div>' : '';
-  // Countdown badge on thumb (only when has releaseDate)
   const cdId = `cd-${c.id}`;
   const badgeRelease = hasCd
     ? `<div class="badge-release"><span class="cd-dot"></span><span id="${cdId}">${fmtCountdown(rel.ms)}</span></div>`
@@ -695,10 +697,10 @@ function renderCard(c, q=''){
     btn = `<button class="btn-go locked">🔜 Sắp ra mắt</button>`;
   }
 
-  let cardClass = 'cert-card';
-  if(canOpen) cardClass += ' can-open';
-  else if(soonDated) cardClass += ' soon-dated';
-  else cardClass += ' locked-card';
+  let cardClass = 'cert-card can-open';
+  if(isVisualSoon) cardClass += ' soon-dated';
+  else if(!canOpen && !soonDated) cardClass = 'cert-card locked-card';
+  else if(!canOpen) cardClass = 'cert-card soon-dated';
 
   const onclick = canOpen ? `go('${esc(c.url)}')` : '';
 

@@ -241,6 +241,15 @@ main{flex:1;padding:30px 40px;max-width:1100px;width:100%;margin:0 auto}
 }
 /* zoom image on hover */
 .cert-card.can-open:hover .thumb-img{transform:scale(1.12)}
+/* centered image (no badge) — fill area, no padding */
+.thumb-img-wrap.thumb-img-centered{
+  padding:0;display:flex;align-items:center;justify-content:center;
+}
+.thumb-img-wrap.thumb-img-centered .thumb-img{
+  width:100%;height:100%;object-fit:cover;border-radius:0;
+}
+/* full gradient when badge=null and no image */
+.thumb-grad-full{position:absolute;inset:0;border-radius:0}
 /* shiny sweep on thumb hover */
 .card-thumb::after{
   content:'';position:absolute;top:0;left:-80%;width:50%;height:100%;
@@ -557,23 +566,25 @@ function thumbGradient(color, locked){
 
 function renderThumb(c, canOpen){
   const locked = !canOpen && !c.isNew;
+  const hasBadge = c.badge !== null && c.badge !== undefined && c.badge !== '';
 
-  /* If cert has image: show image, NO badge-new (badge only for no-image) */
+  /* If cert has image: show image centered, no emoji overlay */
   if(c.image){
-    const ws = c.imageSize?.width  ? `width:${c.imageSize.width}px;`  : '';
-    const hs = c.imageSize?.height ? `height:${c.imageSize.height}px;` : '';
-    const sty = `style="${ws}${hs}max-width:100%;max-height:100%;"`;
     return `
       <div class="card-thumb-grad" style="background:${thumbGradient(c.color||'#555',locked)}"></div>
-      <div class="thumb-img-wrap">
-        <img class="thumb-img" src="${esc(c.image)}" alt="${esc(c.title)}" ${sty} loading="lazy"
-             onerror="this.parentNode.innerHTML='<span class=\\"thumb-emoji\\">${c.badge||'📄'}</span>'">
+      <div class="thumb-img-wrap thumb-img-centered">
+        <img class="thumb-img" src="${esc(c.image)}" alt="${esc(c.title)}" loading="lazy"
+             onerror="this.style.display='none'">
       </div>`;
   }
-  /* emoji fallback */
-  return `
-    <div class="card-thumb-grad" style="background:${thumbGradient(c.color||'#555',locked)}"></div>
-    <span class="thumb-emoji">${c.badge||'📄'}</span>`;
+  /* emoji: only if badge has a real value */
+  if(hasBadge){
+    return `
+      <div class="card-thumb-grad" style="background:${thumbGradient(c.color||'#555',locked)}"></div>
+      <span class="thumb-emoji">${c.badge}</span>`;
+  }
+  /* badge null + no image: just gradient background, no icon */
+  return `<div class="card-thumb-grad thumb-grad-full" style="background:${thumbGradient(c.color||'#555',locked)}"></div>`;
 }
 
 function renderCard(c, q=''){

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chứng chỉ Save the Children</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://unpkg.com/@pdf-lib/fontkit@1.1.1/dist/fontkit.umd.min.js"></script>
+<script src="https://unpkg.com/downloadjs@1.4.7/download.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#D11000;--dark:#2c3547;--bg:#f4f3f0;--card:#fff;--border:#e0ddd6;--text:#1a1a1a;--muted:#6b6b6b}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:grid;grid-template-columns:360px 1fr;grid-template-rows:auto 1fr}
+header{grid-column:1/-1;background:var(--dark);padding:16px 28px;display:flex;align-items:center;gap:14px}
+.logo{width:34px;height:34px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo svg{width:18px;height:18px}
+header h1{font-size:14px;font-weight:600;color:#fff;letter-spacing:.02em}
+header p{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+aside{background:var(--card);border-right:1px solid var(--border);padding:28px 24px;display:flex;flex-direction:column;gap:24px;overflow-y:auto}
+.sec-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:13px;font-weight:500}
+.field input[type=text],.field input[type=date]{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;color:var(--text);background:#fafaf8;outline:none;transition:border-color .15s}
+.field input:focus{border-color:var(--red);background:#fff}
+.hint{font-size:11px;color:var(--muted)}
+.name-badge{background:#fff5f5;border:1px solid #fcc;border-radius:8px;padding:10px 13px;font-size:15px;font-weight:700;color:var(--red);font-style:italic;letter-spacing:.06em;min-height:42px;word-break:break-word}
+.divider{height:1px;background:var(--border)}
+.btn{width:100%;padding:11px;border:none;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-preview{background:var(--dark);color:#fff}.btn-preview:hover{background:#1a2030}
+.btn-download{background:var(--red);color:#fff;margin-top:6px}.btn-download:hover{background:#b50e00}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn svg{width:15px;height:15px;flex-shrink:0}
+.status{font-size:12px;text-align:center;color:var(--muted);min-height:16px;margin-top:4px}
+.status.err{color:var(--red)}.status.ok{color:#1a7a4a}
+main{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;gap:14px;background:#e8e6e0;position:relative;overflow:hidden}
+.placeholder{display:flex;flex-direction:column;align-items:center;gap:10px;color:#aaa}
+.placeholder svg{width:56px;height:56px;opacity:.3}
+.placeholder p{font-size:13px}
+#pdfFrame{display:none;width:100%;max-width:880px;aspect-ratio:1.414/1;border:none;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.18)}
+.loading{display:none;position:absolute;inset:0;background:rgba(232,230,224,.82);align-items:center;justify-content:center;flex-direction:column;gap:10px}
+.loading.on{display:flex}
+.spin{width:34px;height:34px;border:3px solid #ddd;border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{font-size:13px;color:var(--dark);font-weight:500}
+@media(max-width:700px){body{grid-template-columns:1fr;grid-template-rows:auto auto 1fr}aside{border-right:none;border-bottom:1px solid var(--border)}main{min-height:60vw}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <svg viewBox="0 0 20 20" fill="none">
+      <ellipse cx="10" cy="8" rx="4.5" ry="5" fill="#fff"/>
+      <ellipse cx="10" cy="7.5" rx="2.5" ry="3" fill="#D11000"/>
+      <path d="M5.5 13Q10 17 14.5 13" stroke="#fff" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
+  <div>
+    <h1>Save the Children — Chứng chỉ Hoàn thành Khóa học</h1>
+    <p>Chỉnh sửa tên &amp; ngày tháng · Chạy hoàn toàn trên trình duyệt</p>
+  </div>
+</header>
+
+<aside>
+  <div>
+    <div class="sec-label">Thông tin người nhận</div>
+    <div class="field" style="margin-bottom:14px">
+      <label for="nameInput">Họ và tên</label>
+      <input type="text" id="nameInput" placeholder="Tên Của Bạn" autocomplete="off">
+      <span class="hint">Tự động in hoa theo font gốc chứng chỉ</span>
+    </div>
+    <div class="field">
+      <label>Xem trước tên</label>
+      <div class="name-badge" id="nameBadge">—</div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div>
+    <div class="sec-label">Ngày cấp chứng chỉ</div>
+    <div class="field">
+      <label for="dateInput">Ngày tháng năm</label>
+      <input type="date" id="dateInput">
+      <span class="hint">Mặc định: ngày hôm nay</span>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div>
+    <button class="btn btn-preview" id="btnPreview" onclick="doPreview()">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="#fff" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="#fff"/></svg>
+      Xem trước PDF
+    </button>
+    <button class="btn btn-download" id="btnDownload" onclick="doDownload()" disabled>
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h12" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Tải về máy
+    </button>
+    <p class="status" id="statusMsg"></p>
+  </div>
+</aside>
+
+<main>
+  <div class="placeholder" id="placeholder">
+    <svg viewBox="0 0 64 64" fill="none">
+      <rect x="8" y="4" width="40" height="52" rx="4" stroke="#999" stroke-width="2"/>
+      <path d="M16 20h24M16 28h24M16 36h16" stroke="#999" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <p>Nhập tên rồi bấm <strong>Xem trước PDF</strong></p>
+  </div>
+  <iframe id="pdfFrame" title="Xem trước chứng chỉ"></iframe>
+  <div class="loading" id="loading">
+    <div class="spin"></div>
+    <p>Đang tạo chứng chỉ...</p>
+  </div>
+</main>
+
+<script>
+const PDF_B64  = ""
+const FONT_B64 = ""
+
+// Page dimensions (in PDF points)
+const PAGE_W = 1417.32;
+const PAGE_H = 1000.63;
+
+const NAME_COVER = { x: 215, y: 390, w: 520, h: 78 };
+const NAME_X = 239;
+const NAME_Y = 403;
+
+const DATE_COVER = { x: 740, y: 197, w: 245, h: 50 };
+const DATE_X = 751;
+const DATE_Y = 205;
+
+function b64ToUint8(b64){
+  const bin=atob(b64);
+  const arr=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i);
+  return arr;
+}
+
+function makeDateStr(dateStr){
+  const months=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const d=dateStr?new Date(dateStr+"T12:00:00"):new Date();
+  const day=d.getDate();
+  const sfx=[11,12,13].includes(day)?"th":({1:"st",2:"nd",3:"rd"}[day%10]||"th");
+  return months[d.getMonth()]+" "+day+sfx+", "+d.getFullYear();
+}
+
+document.getElementById("dateInput").value=new Date().toISOString().split("T")[0];
+
+document.getElementById("nameInput").addEventListener("input",function(){
+  const v=this.value.trim().toUpperCase();
+  document.getElementById("nameBadge").textContent=v||"—";
+  document.getElementById("btnDownload").disabled=true;
+  setStatus("","");
+});
+
+function setLoading(on){
+  document.getElementById("loading").classList.toggle("on",on);
+  document.getElementById("btnPreview").disabled=on;
+}
+function setStatus(msg,type){
+  const el=document.getElementById("statusMsg");
+  el.textContent=msg;el.className="status "+(type||"");
+}
+
+let lastPdfBytes=null;
+
+async function buildPdf(){
+  const {PDFDocument,rgb,StandardFonts}=PDFLib;
+  const name=document.getElementById("nameInput").value.trim().toUpperCase();
+  const dateStr=document.getElementById("dateInput").value;
+
+  const pdfDoc=await PDFDocument.load(b64ToUint8(PDF_B64));
+  pdfDoc.registerFontkit(fontkit);
+  const customFont=await pdfDoc.embedFont(b64ToUint8(FONT_B64));
+  const helvetica=await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+  const page=pdfDoc.getPages()[0];
+  const nameColor=rgb(209/255, 16/255, 0/255);
+
+  // Không cần xóa nền — PDF gốc đã sạch
+
+  // Auto-shrink font size to fit zone width
+  let fontSize = 60;
+  const maxWidth = NAME_COVER.w - 10;
+  while(fontSize > 20){
+    const w = customFont.widthOfTextAtSize(name, fontSize);
+    if(w <= maxWidth) break;
+    fontSize--;
+  }
+  const textW = customFont.widthOfTextAtSize(name, fontSize);
+  const startX = (NAME_COVER.x + NAME_COVER.x + NAME_COVER.w) / 2 - textW / 2;
+
+  page.drawText(name, {x:startX,y:NAME_Y,font:customFont,size:fontSize,color:nameColor});
+  page.drawText(makeDateStr(dateStr), {x:DATE_X,y:DATE_Y,font:helvetica,size:25,color:rgb(0,0,0)});
+
+  return await pdfDoc.save();
+}
+
+async function doPreview(){
+  const name=document.getElementById("nameInput").value.trim();
+  if(!name){setStatus("Vui lòng nhập họ và tên!","err");document.getElementById("nameInput").focus();return;}
+  setLoading(true);setStatus("","");
+  try{
+    const bytes=await buildPdf();
+    lastPdfBytes=bytes;
+    const blob=new Blob([bytes],{type:"application/pdf"});
+    const url=URL.createObjectURL(blob);
+    const frame=document.getElementById("pdfFrame");
+    frame.src=url+"#toolbar=0&navpanes=0&scrollbar=0";
+    frame.style.display="block";
+    document.getElementById("placeholder").style.display="none";
+    document.getElementById("btnDownload").disabled=false;
+    setStatus("✓ Xem trước thành công","ok");
+  }catch(e){
+    setStatus("Lỗi: "+e.message,"err");
+    console.error(e);
+  }finally{
+    setLoading(false);
+  }
+}
+
+async function doDownload(){
+  const name=document.getElementById("nameInput").value.trim();
+  if(!name)return;
+  setStatus("Đang tạo file...","");
+  try{
+    const bytes=lastPdfBytes||await buildPdf();
+    const safe=name.replace(/\s+/g,"_").replace(/[^\w_]/g,"_");
+    download(new Blob([bytes],{type:"application/pdf"}),"chung_chi_"+safe+".pdf","application/pdf");
+    setStatus("✓ Đã tải về!","ok");
+  }catch(e){
+    setStatus("Lỗi: "+e.message,"err");
+  }
+}
+
+document.getElementById("nameInput").addEventListener("keydown",function(e){
+  if(e.key==="Enter")doPreview();
+});
+</script>
+</body>
+</html>

@@ -1,11 +1,11 @@
 {
   "site": {
     "name": "NTZ Creator",
-    "tagline": "Dong Thap Vocational College — Certificate Issuance System",
+    "tagline": "Dong Thap Community College — Certificate Issuance System",
     "description": "Hệ thống tạo và cấp phát chứng chỉ hoàn thành khóa học trực tuyến. Nhập tên, chọn ngày, tải về ngay — không cần cài đặt gì thêm.",
-    "organization": "Dong Thap Vocational College",
-    "organizationVi": "Cao Đẳng Đồng Tháp",
-    "footerNote": "© 2025 NTZ Creator · Dong Thap Vocational College"
+    "organization": "Dong Thap Community College",
+    "organizationVi": "Cao Đẳng Cộng Đồng Đồng Tháp",
+    "footerNote": "© 2025 NTZ Creator · Dong Thap Community College"
   },
   "certificates": [
     {

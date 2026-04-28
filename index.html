@@ -209,6 +209,47 @@ main{flex:1;padding:30px 40px;max-width:1100px;width:100%;margin:0 auto}
 .cert-card.locked-card .card-thumb{filter:grayscale(1) brightness(.92);}
 .cert-card.locked-card{border-color:#ddd}
 
+/* COMING SOON with release date — hover enabled */
+.cert-card.soon-dated{cursor:default;border-color:#ddd}
+.cert-card.soon-dated:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 36px rgba(0,0,0,.12),0 2px 8px rgba(0,0,0,.06);
+  border-color:var(--border2);
+}
+.cert-card.soon-dated .card-thumb{filter:grayscale(.6) brightness(.88);}
+.cert-card.soon-dated:hover .card-thumb{filter:grayscale(.2) brightness(.95);}
+
+/* Release countdown badge on thumb */
+.badge-release{
+  position:absolute;bottom:8px;left:8px;z-index:3;
+  background:rgba(17,20,24,.72);color:#fff;
+  font-size:9.5px;font-weight:600;padding:4px 10px;
+  border-radius:20px;backdrop-filter:blur(6px);
+  display:flex;align-items:center;gap:5px;
+  border:1px solid rgba(255,255,255,.12);
+}
+.badge-release .cd-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:#f87060;flex-shrink:0;
+  animation:cdBlink 1s ease-in-out infinite;
+}
+@keyframes cdBlink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* Release row in card body */
+.release-row{
+  margin-top:10px;padding-top:10px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:7px;
+  font-size:10.5px;color:var(--muted);
+}
+.release-row .rel-icon{font-size:12px;flex-shrink:0}
+.release-row .rel-label{color:var(--muted2);font-weight:500}
+.release-row .rel-val{font-weight:600;color:var(--text2);margin-left:auto}
+.release-row .rel-countdown{
+  font-weight:700;color:var(--red);margin-left:auto;
+  font-variant-numeric:tabular-nums;letter-spacing:.01em;
+}
+
 /* HOVER — active cards */
 .cert-card.can-open{cursor:pointer}
 .cert-card.can-open:hover{
@@ -587,42 +628,98 @@ function renderThumb(c, canOpen){
   return `<div class="card-thumb-grad thumb-grad-full" style="background:${thumbGradient(c.color||'#555',locked)}"></div>`;
 }
 
+/* ── Release date helpers ── */
+function releaseInfo(str){
+  if(!str) return null;
+  const diff = new Date(str) - new Date();
+  return { ms: diff, released: diff <= 0 };
+}
+function fmtCountdown(ms){
+  if(ms <= 0) return null;
+  const s = Math.floor(ms/1000);
+  const d = Math.floor(s/86400);
+  const h = Math.floor((s%86400)/3600);
+  const m = Math.floor((s%3600)/60);
+  const sc = s%60;
+  if(d > 0) return `${d}n ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sc).padStart(2,'0')}`;
+}
+
 function renderCard(c, q=''){
-  const exp    = expiryInfo(c.accessExpiry);
-  const canOpen= !!c.url && exp.active;
-  const locked = !canOpen;
-  const hasImg = !!c.image;
+  const exp      = expiryInfo(c.accessExpiry);
+  const rel      = releaseInfo(c.releaseDate);
+  const isSoon   = c.soon === true;
+  // has release date and not yet released
+  const hasCd    = rel && !rel.released;
+  // can open: has url AND (no releaseDate OR already released) AND access not expired
+  const canOpen  = !!c.url && (!rel || rel.released) && exp.active;
+  // soon-dated: soon=true AND has releaseDate not yet passed (hover enabled)
+  const soonDated = isSoon && hasCd;
+  const locked   = !canOpen;
+  const hasImg   = !!c.image;
 
-  /* Badge NEW only shown if cert has NO image */
-  const badgeNew    = c.isNew && !hasImg ? '<div class="badge-new">NEW</div>' : '';
-  const badgeNewImg = '';
-  const badgeSoon = !c.url ? '<div class="badge-soon">COMING SOON</div>' : '';
-  const expThumb  = c.accessExpiry ? `<div class="badge-expiry-thumb">⏱ ${exp.label}</div>` : '';
-  const expiryRow = c.accessExpiry
+  const badgeNew  = c.isNew && !hasImg ? '<div class="badge-new">NEW</div>' : '';
+  // COMING SOON badge: only when soon=true
+  const badgeSoon = isSoon && !canOpen
+    ? '<div class="badge-soon">COMING SOON</div>' : '';
+  // Countdown badge on thumb (only when has releaseDate)
+  const cdId = `cd-${c.id}`;
+  const badgeRelease = hasCd
+    ? `<div class="badge-release"><span class="cd-dot"></span><span id="${cdId}">${fmtCountdown(rel.ms)}</span></div>`
+    : '';
+  const expThumb = c.accessExpiry && !hasCd
+    ? `<div class="badge-expiry-thumb">⏱ ${exp.label}</div>` : '';
+
+  // Release row in body
+  let releaseRow = '';
+  if(rel){
+    const dateStr = new Date(c.releaseDate).toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit',year:'numeric'});
+    if(hasCd){
+      releaseRow = `<div class="release-row"><span class="rel-icon">🕐</span><span class="rel-label">Ra mắt sau</span><span class="rel-countdown" id="${cdId}-body">${fmtCountdown(rel.ms)}</span></div>`;
+    } else {
+      releaseRow = `<div class="release-row"><span class="rel-icon">✅</span><span class="rel-label">Đã ra mắt</span><span class="rel-val">${dateStr}</span></div>`;
+    }
+  }
+
+  const expiryRow = c.accessExpiry && !hasCd
     ? `<div class="expiry-row"><div class="expiry-dot ${exp.cls}"></div><span>${exp.label}</span></div>` : '';
-  const btn = canOpen
-    ? `<button class="btn-go open" onclick="event.stopPropagation();go('${esc(c.url)}')">Tạo ngay →</button>`
-    : `<button class="btn-go locked">${exp.active===false?'🔒 Hết hạn':'🔜 Sắp ra mắt'}</button>`;
 
-  const cardClass = `cert-card${canOpen?' can-open':''}${locked?' locked-card':''}`;
+  let btn;
+  if(canOpen){
+    btn = `<button class="btn-go open" onclick="event.stopPropagation();go('${esc(c.url)}')">Tạo ngay →</button>`;
+  } else if(exp.active === false){
+    btn = `<button class="btn-go locked">🔒 Hết hạn</button>`;
+  } else if(hasCd){
+    btn = `<button class="btn-go locked">⏳ Chưa ra mắt</button>`;
+  } else {
+    btn = `<button class="btn-go locked">🔜 Sắp ra mắt</button>`;
+  }
+
+  let cardClass = 'cert-card';
+  if(canOpen) cardClass += ' can-open';
+  else if(soonDated) cardClass += ' soon-dated';
+  else cardClass += ' locked-card';
+
+  const onclick = canOpen ? `go('${esc(c.url)}')` : '';
 
   return `
-  <div class="${cardClass}" onclick="${canOpen?`go('${esc(c.url)}')`:''}"
-       data-new="${c.isNew}" data-active="${canOpen}">
+  <div class="${cardClass}" onclick="${onclick}" data-new="${c.isNew}" data-active="${canOpen}" data-id="${esc(c.id)}">
     <div class="card-thumb">
-      ${renderThumb(c,canOpen)}
-      ${hasImg ? badgeNewImg : badgeNew}
+      ${renderThumb(c, canOpen || soonDated)}
+      ${badgeNew}
       ${badgeSoon}
+      ${badgeRelease}
       ${expThumb}
     </div>
     <div class="card-body">
       <div class="card-label-row">
-        <div class="card-dot" style="background:${locked?'#bbb':(c.color||'#555')}"></div>
-        <span class="card-category">${locked?'Sắp ra mắt':'Chứng chỉ'}</span>
+        <div class="card-dot" style="background:${canOpen?(c.color||'#555'):soonDated?(c.color||'#999'):'#bbb'}"></div>
+        <span class="card-category">${canOpen?'Chứng chỉ':hasCd?'Sắp ra mắt':isSoon?'Sắp ra mắt':'Chứng chỉ'}</span>
       </div>
       <div class="card-title">${highlight(c.title,q)}</div>
       <div class="card-title-en">${esc(c.titleEn||'')}</div>
       <div class="card-desc">${highlight(c.description,q)}</div>
+      ${releaseRow}
       ${expiryRow}
       <div class="card-footer">
         <div class="card-org">${esc(siteOrg)}</div>
@@ -631,6 +728,23 @@ function renderCard(c, q=''){
     </div>
   </div>`;
 }
+
+/* ── Countdown ticker (updates every second) ── */
+function tickCountdowns(){
+  document.querySelectorAll('[data-id]').forEach(card=>{
+    const id = card.dataset.id;
+    const cert = allCerts.find(c=>c.id===id);
+    if(!cert||!cert.releaseDate) return;
+    const ms = new Date(cert.releaseDate) - new Date();
+    if(ms <= 0) return;
+    const txt = fmtCountdown(ms);
+    const el1 = document.getElementById('cd-'+id);
+    const el2 = document.getElementById('cd-'+id+'-body');
+    if(el1) el1.textContent = txt;
+    if(el2) el2.textContent = txt;
+  });
+}
+setInterval(tickCountdowns, 1000);
 
 function getList(){
   let list=[...allCerts];

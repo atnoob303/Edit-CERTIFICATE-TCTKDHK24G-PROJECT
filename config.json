@@ -1,0 +1,56 @@
+{
+  "site": {
+    "name": "NTZ Creator",
+    "tagline": "Dong Thap Vocational College — Certificate Issuance System",
+    "description": "Hệ thống tạo và cấp phát chứng chỉ hoàn thành khóa học trực tuyến. Nhập tên, chọn ngày, tải về ngay — không cần cài đặt gì thêm.",
+    "organization": "Dong Thap Vocational College",
+    "organizationVi": "Cao Đẳng Đồng Tháp",
+    "footerNote": "© 2025 NTZ Creator · Dong Thap Vocational College"
+  },
+  "certificates": [
+    {
+      "id": "skill-to-succeed",
+      "title": "Kỹ năng Thành công",
+      "titleEn": "Skill to Succeed",
+      "description": "Chứng chỉ hoàn thành khóa đào tạo trực tuyến về kỹ năng mềm, tư duy tích cực và phát triển bản thân.",
+      "badge": "🏆",
+      "color": "#D11000",
+      "isNew": false,
+      "accessExpiry": null,
+      "url": "https://atnoob303.github.io/FOLDER_CUA_BAN/"
+    },
+    {
+      "id": "digital-skills",
+      "title": "Kỹ năng Số",
+      "titleEn": "Digital Skills",
+      "description": "Chứng chỉ hoàn thành khóa đào tạo kỹ năng công nghệ số, sử dụng công cụ kỹ thuật số trong công việc.",
+      "badge": "💻",
+      "color": "#1a6fc4",
+      "isNew": true,
+      "accessExpiry": "2025-12-31",
+      "url": "https://atnoob303.github.io/FOLDER_CUA_BAN/"
+    },
+    {
+      "id": "leadership",
+      "title": "Lãnh đạo & Quản lý",
+      "titleEn": "Leadership & Management",
+      "description": "Chứng chỉ hoàn thành khóa học kỹ năng lãnh đạo, quản lý nhóm và ra quyết định hiệu quả.",
+      "badge": "🌟",
+      "color": "#2e7d32",
+      "isNew": true,
+      "accessExpiry": "2026-06-30",
+      "url": "https://atnoob303.github.io/FOLDER_CUA_BAN/"
+    },
+    {
+      "id": "child-protection",
+      "title": "Bảo vệ Trẻ em",
+      "titleEn": "Child Protection",
+      "description": "Chứng chỉ hoàn thành khóa đào tạo về nhận diện, phòng ngừa và ứng phó với các nguy cơ xâm hại trẻ em.",
+      "badge": "🛡️",
+      "color": "#6a1b9a",
+      "isNew": false,
+      "accessExpiry": null,
+      "url": null
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NTZ Creator</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--red:#D11000;--dark:#1e2533;--bg:#f0eeea;--card:#fff;--border:#e0ddd6;--text:#1a1a1a;--muted:#6b6b6b;--radius:14px}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+header{background:var(--dark);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.header-left{display:flex;align-items:center;gap:14px}
+.logo-mark{width:38px;height:38px;background:var(--red);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
+.header-titles h1{font-size:15px;font-weight:700;color:#fff;line-height:1.2}
+.header-titles p{font-size:11px;color:rgba(255,255,255,.38);margin-top:1px}
+.header-right{font-size:11px;color:rgba(255,255,255,.3);text-align:right;line-height:1.6}
+.hero{background:linear-gradient(135deg,#1e2533 0%,#2c3a52 60%,#1e2533 100%);padding:56px 40px 52px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-60px;width:320px;height:320px;background:var(--red);opacity:.06;border-radius:50%}
+.hero::after{content:'';position:absolute;bottom:-100px;left:-50px;width:260px;height:260px;background:#fff;opacity:.03;border-radius:50%}
+.hero-inner{position:relative;z-index:1;max-width:620px;margin:0 auto}
+.hero-badge{display:inline-block;background:rgba(209,16,0,.18);border:1px solid rgba(209,16,0,.35);color:#ff6b5b;font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;margin-bottom:16px;letter-spacing:.06em}
+.hero h2{font-size:34px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:12px}
+.hero h2 span{color:var(--red)}
+.hero p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.75;margin-bottom:28px}
+.hero-stats{display:flex;justify-content:center;gap:0}
+.stat{padding:0 28px;text-align:center}
+.stat+.stat{border-left:1px solid rgba(255,255,255,.1)}
+.stat .num{font-size:24px;font-weight:800;color:#fff}
+.stat .lbl{font-size:11px;color:rgba(255,255,255,.38);margin-top:4px}
+main{flex:1;padding:40px;max-width:1100px;width:100%;margin:0 auto}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.section-title{font-size:18px;font-weight:700}
+.section-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.filter-tabs{display:flex;gap:8px}
+.tab{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:inherit;transition:all .15s}
+.tab.active,.tab:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:20px}
+.cert-card{background:var(--card);border-radius:var(--radius);border:1.5px solid var(--border);overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;position:relative}
+.cert-card.can-open{cursor:pointer}
+.cert-card.can-open:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.13)}
+.card-thumb{height:155px;display:flex;align-items:center;justify-content:center;font-size:54px;position:relative;overflow:hidden}
+.card-thumb-bg{position:absolute;inset:0;opacity:.1}
+.badge-new{position:absolute;top:10px;right:10px;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.05em;z-index:1}
+.badge-soon{position:absolute;top:10px;right:10px;background:#999;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;z-index:1}
+.badge-expiry-thumb{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:3px 9px;border-radius:20px;z-index:1;backdrop-filter:blur(4px)}
+.card-body{padding:18px 18px 16px;flex:1;display:flex;flex-direction:column}
+.card-title{font-size:15px;font-weight:700;margin-bottom:3px}
+.card-title-en{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:10px}
+.card-desc{font-size:12px;color:var(--muted);line-height:1.65;flex:1}
+.expiry-row{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.expiry-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.expiry-dot.ok{background:#1a7a4a}.expiry-dot.warn{background:#f59e0b}.expiry-dot.dead{background:#ef4444}
+.card-footer{margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card-org{font-size:11px;color:var(--muted)}
+.btn-go{padding:7px 15px;border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.btn-go.open{background:var(--dark);color:#fff}.btn-go.open:hover{background:#111820}
+.btn-go.locked{background:#e8e6e0;color:#aaa;cursor:not-allowed}
+.skel-card{background:var(--card);border-radius:var(--radius);border:1.5px solid var(--border);overflow:hidden;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.skel-thumb{height:155px;background:#e8e6e0}
+.skel-body{padding:18px}
+.skel-line{height:12px;background:#e8e6e0;border-radius:6px;margin-bottom:10px}
+.w80{width:80%}.w60{width:60%}.w40{width:40%}
+.empty-msg{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-msg .icon{font-size:46px;margin-bottom:14px}
+.empty-msg h3{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
+footer{background:var(--dark);padding:18px 40px;text-align:center;font-size:11px;color:rgba(255,255,255,.28)}
+@media(max-width:680px){.hero{padding:36px 20px 32px}.hero h2{font-size:26px}main{padding:24px 16px}header{padding:0 16px}.hero-stats{gap:0}.stat{padding:0 16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <div class="logo-mark">N</div>
+    <div class="header-titles">
+      <h1 id="siteName">NTZ Creator</h1>
+      <p id="siteTagline">Certificate Issuance System</p>
+    </div>
+  </div>
+  <div class="header-right" id="headerOrg"></div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge" id="heroBadge">NTZ CREATOR · CERTIFICATE SYSTEM</div>
+    <h2>Hệ thống cấp phát<br><span>Chứng chỉ Trực tuyến</span></h2>
+    <p id="heroDesc">Đang tải thông tin...</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="num" id="statTotal">—</div><div class="lbl">Loại chứng chỉ</div></div>
+      <div class="stat"><div class="num" id="statActive">—</div><div class="lbl">Hoạt động</div></div>
+      <div class="stat"><div class="num" id="statNew">—</div><div class="lbl">Mới thêm</div></div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="section-header">
+    <div>
+      <div class="section-title">Danh sách chứng chỉ</div>
+      <div class="section-sub" id="sectionSub">Đang tải...</div>
+    </div>
+    <div class="filter-tabs">
+      <button class="tab active" onclick="filterCards(this,'all')">Tất cả</button>
+      <button class="tab" onclick="filterCards(this,'active')">Hoạt động</button>
+      <button class="tab" onclick="filterCards(this,'new')">Mới</button>
+    </div>
+  </div>
+  <div class="cert-grid" id="certGrid">
+    <div class="skel-card"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+    <div class="skel-card"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+    <div class="skel-card"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
+  </div>
+</main>
+
+<footer id="siteFooter">© NTZ Creator</footer>
+
+<script>
+let allCerts=[], siteOrg='Cao Đẳng Đồng Tháp';
+
+function expiryInfo(str){
+  if(!str)return{cls:'ok',label:'Không giới hạn',active:true};
+  const diff=Math.ceil((new Date(str)-new Date())/86400000);
+  if(diff<0)return{cls:'dead',label:'Đã hết hạn',active:false};
+  if(diff<=30)return{cls:'warn',label:`Còn ${diff} ngày`,active:true};
+  return{cls:'ok',label:`HSD: ${new Date(str).toLocaleDateString('vi-VN')}`,active:true};
+}
+
+function renderCard(c){
+  const exp=expiryInfo(c.accessExpiry);
+  const canOpen=!!c.url&&exp.active;
+  const badgeHtml=c.isNew?'<div class="badge-new">NEW</div>':(!c.url?'<div class="badge-soon">COMING SOON</div>':'');
+  const expThumb=c.accessExpiry?`<div class="badge-expiry-thumb">⏱ ${exp.label}</div>`:'';
+  const expiryRow=c.accessExpiry?`<div class="expiry-row"><div class="expiry-dot ${exp.cls}"></div><span>${exp.label}</span></div>`:'';
+  const btn=canOpen
+    ?`<button class="btn-go open" onclick="event.stopPropagation();go('${c.url}')">Tạo ngay →</button>`
+    :`<button class="btn-go locked">${exp.active===false?'🔒 Hết hạn':'🔜 Sắp ra mắt'}</button>`;
+  return `
+  <div class="cert-card ${canOpen?'can-open':''}" onclick="${canOpen?`go('${c.url}')`:''}" data-new="${c.isNew}" data-active="${canOpen}">
+    <div class="card-thumb" style="background:${c.color}15">
+      <div class="card-thumb-bg" style="background:${c.color}"></div>
+      <span style="position:relative;z-index:1">${c.badge}</span>
+      ${badgeHtml}${expThumb}
+    </div>
+    <div class="card-body">
+      <div class="card-title">${c.title}</div>
+      <div class="card-title-en">${c.titleEn}</div>
+      <div class="card-desc">${c.description}</div>
+      ${expiryRow}
+      <div class="card-footer">
+        <div class="card-org">${siteOrg}</div>
+        ${btn}
+      </div>
+    </div>
+  </div>`;
+}
+
+function filterCards(btn,f){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  let list=allCerts;
+  if(f==='active')list=allCerts.filter(c=>c.url&&expiryInfo(c.accessExpiry).active);
+  if(f==='new')list=allCerts.filter(c=>c.isNew);
+  document.getElementById('certGrid').innerHTML=list.length
+    ?list.map(renderCard).join('')
+    :`<div class="empty-msg"><div class="icon">🔍</div><h3>Không có kết quả</h3><p>Không tìm thấy chứng chỉ phù hợp.</p></div>`;
+}
+
+function go(url){window.location.href=url;}
+
+async function init(){
+  try{
+    const res=await fetch('config.json?t='+Date.now());
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const cfg=await res.json();
+    const s=cfg.site;
+    siteOrg=s.organizationVi;
+    document.title=s.name+' — '+s.organizationVi;
+    document.getElementById('siteName').textContent=s.name;
+    document.getElementById('siteTagline').textContent=s.tagline;
+    document.getElementById('heroDesc').textContent=s.description;
+    document.getElementById('headerOrg').innerHTML=s.organization+'<br><span style="font-size:10px;opacity:.6">'+s.organizationVi+'</span>';
+    document.getElementById('siteFooter').textContent=s.footerNote;
+    document.getElementById('heroBadge').textContent=s.name.toUpperCase()+' · CERTIFICATE SYSTEM';
+    allCerts=cfg.certificates;
+    const active=allCerts.filter(c=>c.url&&expiryInfo(c.accessExpiry).active);
+    const newOnes=allCerts.filter(c=>c.isNew);
+    document.getElementById('statTotal').textContent=allCerts.length;
+    document.getElementById('statActive').textContent=active.length;
+    document.getElementById('statNew').textContent=newOnes.length;
+    document.getElementById('sectionSub').textContent=`${allCerts.length} loại chứng chỉ · ${active.length} đang hoạt động`;
+    document.getElementById('certGrid').innerHTML=allCerts.map(renderCard).join('');
+  }catch(e){
+    document.getElementById('certGrid').innerHTML=`<div class="empty-msg"><div class="icon">⚠️</div><h3>Không tải được danh sách</h3><p>Đảm bảo file <code>config.json</code> nằm cùng thư mục.<br><small>${e.message}</small></p></div>`;
+  }
+}
+init();
+</script>
+</body>
+</html>

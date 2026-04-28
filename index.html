@@ -285,25 +285,28 @@ main{flex:1;padding:30px 40px;max-width:1100px;width:100%;margin:0 auto}
 /* ═══════════════ LIST VIEW — FIXED ═══════════════ */
 .cert-grid.list-view .cert-card{
   flex-direction:row;
-  height:120px;
+  height:auto;
+  min-height:120px;
 }
 .cert-grid.list-view .card-thumb{
-  width:150px;height:120px;flex-shrink:0;
+  width:160px;min-height:120px;flex-shrink:0;align-self:stretch;
 }
 .cert-grid.list-view .card-body{
   flex:1;padding:14px 18px;
   display:flex;flex-direction:column;justify-content:center;
-  min-width:0;
+  min-width:0;overflow:visible;
 }
 /* list hover: image zoom + body slight compress */
 .cert-grid.list-view .cert-card.can-open:hover{transform:translateY(-3px)}
 .cert-grid.list-view .cert-card.can-open:hover .thumb-img{transform:scale(1.1)}
-.cert-grid.list-view .cert-card.can-open:hover .card-thumb{width:155px}
+.cert-grid.list-view .cert-card.can-open:hover .card-thumb{width:165px}
 .cert-grid.list-view .cert-card.can-open:hover .card-body{padding-left:14px}
 .cert-grid.list-view .card-title{font-size:14px}
 .cert-grid.list-view .card-desc{
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  display:block;overflow:visible;-webkit-line-clamp:unset;
 }
+.cert-grid.list-view .card-footer{margin-top:10px}
+.cert-grid.list-view .expiry-row{margin-top:8px;padding-top:8px}
 
 /* ═══════════════ HOVER EFFECT: text area shrinks ═══════════════ */
 /* In grid view: thumb expands, body shrinks slightly via transform */
@@ -539,10 +542,9 @@ function renderCard(c, q=''){
   const locked = !canOpen;
   const hasImg = !!c.image;
 
-  /* Badge NEW only shown if cert has NO image (image replaces badge role) */
-  const badgeNew  = c.isNew && !hasImg ? '<div class="badge-new">NEW</div>' : '';
-  /* NEW badge overlay for image cards: show as small pill on image */
-  const badgeNewImg = c.isNew && hasImg ? '<div class="badge-new">NEW</div>' : '';
+  /* Badge NEW only shown if cert has NO image */
+  const badgeNew    = c.isNew && !hasImg ? '<div class="badge-new">NEW</div>' : '';
+  const badgeNewImg = '';
   const badgeSoon = !c.url ? '<div class="badge-soon">COMING SOON</div>' : '';
   const expThumb  = c.accessExpiry ? `<div class="badge-expiry-thumb">⏱ ${exp.label}</div>` : '';
   const expiryRow = c.accessExpiry

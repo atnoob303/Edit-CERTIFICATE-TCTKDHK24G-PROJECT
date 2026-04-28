@@ -6,16 +6,73 @@
 <title>NTZ Creator</title>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════════
+   RESET + ROOT — FORCE LIGHT MODE ALWAYS
+═══════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--red:#D11000;--dark:#1e2533;--bg:#f0eeea;--card:#fff;--border:#e0ddd6;--text:#1a1a1a;--muted:#6b6b6b;--radius:14px}
-body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
-header{background:var(--dark);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+:root{
+  color-scheme: light !important;
+  --red:#D11000;
+  --dark:#1e2533;
+  --bg:#f0eeea;
+  --card:#ffffff;
+  --card-hover:#fafaf8;
+  --border:#e0ddd6;
+  --border-hover:#c8c4bc;
+  --text:#1a1a1a;
+  --text2:#374151;
+  --muted:#6b6b6b;
+  --muted2:#9ca3af;
+  --radius:14px;
+  --shadow:0 1px 4px rgba(0,0,0,.06),0 2px 12px rgba(0,0,0,.06);
+  --shadow-hover:0 8px 32px rgba(0,0,0,.13),0 2px 8px rgba(0,0,0,.06);
+  --tr:.18s cubic-bezier(.4,0,.2,1);
+}
+html{color-scheme:light !important}
+body{
+  font-family:'Be Vietnam Pro',sans-serif;
+  background:#f0eeea !important;color:#1a1a1a !important;
+  min-height:100vh;display:flex;flex-direction:column;
+}
+
+/* ── HEADER ── */
+header{
+  background:#fff;padding:0 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;position:sticky;top:0;z-index:100;
+  border-bottom:1.5px solid var(--border);
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+}
 .header-left{display:flex;align-items:center;gap:14px}
-.logo-mark{width:38px;height:38px;background:var(--red);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;flex-shrink:0}
-.header-titles h1{font-size:15px;font-weight:700;color:#fff;line-height:1.2}
-.header-titles p{font-size:11px;color:rgba(255,255,255,.38);margin-top:1px}
-.header-right{font-size:11px;color:rgba(255,255,255,.3);text-align:right;line-height:1.6}
-.hero{background:linear-gradient(135deg,#1e2533 0%,#2c3a52 60%,#1e2533 100%);padding:56px 40px 52px;text-align:center;position:relative;overflow:hidden}
+.logo-mark{
+  width:38px;height:38px;background:var(--red);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:800;color:#fff;flex-shrink:0;
+  box-shadow:0 3px 10px rgba(209,16,0,.3);
+  transition:transform var(--tr),box-shadow var(--tr);cursor:default;
+}
+.logo-mark:hover{transform:scale(1.1) rotate(-5deg);box-shadow:0 6px 18px rgba(209,16,0,.4)}
+.header-titles h1{font-size:15px;font-weight:700;color:var(--text);line-height:1.2}
+.header-titles p{font-size:11px;color:var(--muted);margin-top:1px}
+.header-right{font-size:11px;color:var(--muted);text-align:right;line-height:1.6}
+.header-right strong{color:var(--text2);font-weight:600}
+.header-actions{display:flex;align-items:center;gap:8px}
+.btn-icon{
+  width:34px;height:34px;border-radius:9px;
+  border:1.5px solid var(--border);background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:15px;color:var(--muted);
+  transition:all var(--tr);
+}
+.btn-icon:hover{background:var(--bg);border-color:var(--border-hover);color:var(--text);transform:translateY(-1px)}
+.btn-icon:active{transform:scale(.9)}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,#1e2533 0%,#2c3a52 60%,#1e2533 100%);
+  padding:56px 40px 52px;text-align:center;
+  position:relative;overflow:hidden;
+}
 .hero::before{content:'';position:absolute;top:-80px;right:-60px;width:320px;height:320px;background:var(--red);opacity:.06;border-radius:50%}
 .hero::after{content:'';position:absolute;bottom:-100px;left:-50px;width:260px;height:260px;background:#fff;opacity:.03;border-radius:50%}
 .hero-inner{position:relative;z-index:1;max-width:620px;margin:0 auto}
@@ -24,52 +81,216 @@ header{background:var(--dark);padding:0 40px;display:flex;align-items:center;jus
 .hero h2 span{color:var(--red)}
 .hero p{font-size:14px;color:rgba(255,255,255,.5);line-height:1.75;margin-bottom:28px}
 .hero-stats{display:flex;justify-content:center;gap:0}
-.stat{padding:0 28px;text-align:center}
+.stat{padding:0 28px;text-align:center;cursor:pointer}
 .stat+.stat{border-left:1px solid rgba(255,255,255,.1)}
-.stat .num{font-size:24px;font-weight:800;color:#fff}
+.stat .num{font-size:24px;font-weight:800;color:#fff;display:inline-block;transition:transform var(--tr),color var(--tr)}
+.stat:hover .num{transform:scale(1.2);color:#ff6b5b}
 .stat .lbl{font-size:11px;color:rgba(255,255,255,.38);margin-top:4px}
-main{flex:1;padding:40px;max-width:1100px;width:100%;margin:0 auto}
+
+/* ── SEARCH BAR ── */
+.search-wrap{
+  background:#fff;border-bottom:1.5px solid var(--border);
+  padding:12px 40px;
+}
+.search-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.search-box{flex:1;position:relative}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none;opacity:.4}
+.search-input{
+  width:100%;height:40px;padding:0 36px 0 38px;
+  border:1.5px solid var(--border);border-radius:10px;
+  font-family:'Be Vietnam Pro',sans-serif;font-size:13px;
+  background:#fafaf8;color:var(--text);outline:none;
+  transition:border-color var(--tr),box-shadow var(--tr),background var(--tr);
+}
+.search-input::placeholder{color:var(--muted2)}
+.search-input:focus{border-color:var(--dark);background:#fff;box-shadow:0 0 0 3px rgba(30,37,51,.08)}
+.search-kbd{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-size:10px;color:var(--muted2);background:var(--bg);
+  border:1px solid var(--border);border-radius:5px;padding:2px 6px;pointer-events:none;
+  transition:opacity var(--tr);
+}
+.search-clear{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  width:20px;height:20px;border-radius:50%;background:var(--muted2);color:#fff;
+  border:none;font-size:11px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  transition:background var(--tr),transform var(--tr);
+}
+.search-clear.show{display:flex}
+.search-clear:hover{background:var(--dark);transform:translateY(-50%) scale(1.1)}
+.search-count{
+  font-size:12px;color:var(--muted);white-space:nowrap;
+  background:var(--bg);border:1.5px solid var(--border);
+  padding:6px 14px;border-radius:8px;font-weight:500;
+  display:none;
+}
+
+/* ── MAIN ── */
+main{flex:1;padding:32px 40px;max-width:1100px;width:100%;margin:0 auto}
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
-.section-title{font-size:18px;font-weight:700}
+.section-title{font-size:18px;font-weight:700;color:var(--text)}
 .section-sub{font-size:13px;color:var(--muted);margin-top:3px}
-.filter-tabs{display:flex;gap:8px}
-.tab{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:inherit;transition:all .15s}
-.tab.active,.tab:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
+.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.filter-tabs{display:flex;gap:6px}
+.tab{
+  padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;
+  border:1.5px solid var(--border);background:transparent;color:var(--muted);
+  font-family:inherit;transition:all var(--tr);
+}
+.tab:hover{background:var(--bg);border-color:var(--border-hover);color:var(--text);transform:translateY(-1px)}
+.tab:active{transform:scale(.95)}
+.tab.active{background:var(--dark);color:#fff;border-color:var(--dark);box-shadow:0 2px 8px rgba(30,37,51,.25)}
+.toolbar-sep{width:1px;height:26px;background:var(--border);flex-shrink:0}
+.sort-select{
+  height:34px;padding:0 10px;border:1.5px solid var(--border);border-radius:9px;
+  font-family:'Be Vietnam Pro',sans-serif;font-size:12px;font-weight:500;
+  background:#fff;color:var(--text);cursor:pointer;outline:none;transition:border-color var(--tr);
+}
+.sort-select:hover,.sort-select:focus{border-color:var(--dark)}
+.view-btns{display:flex;border:1.5px solid var(--border);border-radius:9px;overflow:hidden}
+.view-btn{
+  width:34px;height:32px;border:none;background:transparent;cursor:pointer;
+  font-size:14px;color:var(--muted);transition:all var(--tr);
+  display:flex;align-items:center;justify-content:center;
+}
+.view-btn:hover{background:var(--bg);color:var(--text)}
+.view-btn.active{background:var(--dark);color:#fff}
+
+/* ── GRID ── */
 .cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:20px}
-.cert-card{background:var(--card);border-radius:var(--radius);border:1.5px solid var(--border);overflow:hidden;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column;position:relative}
+.cert-grid.list-view{grid-template-columns:1fr}
+
+/* ── CARD ── */
+.cert-card{
+  background:var(--card);border-radius:var(--radius);
+  border:1.5px solid var(--border);overflow:hidden;
+  transition:transform var(--tr),box-shadow var(--tr),border-color var(--tr);
+  display:flex;flex-direction:column;position:relative;
+  box-shadow:var(--shadow);
+  animation:cardIn .3s ease both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .cert-card.can-open{cursor:pointer}
-.cert-card.can-open:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.13)}
+.cert-card.can-open:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);border-color:var(--border-hover)}
+.cert-card.can-open:active{transform:translateY(-2px) scale(.98)}
+
+/* list mode */
+.cert-grid.list-view .cert-card{flex-direction:row}
+.cert-grid.list-view .card-thumb{width:130px;height:auto;min-height:100px;flex-shrink:0}
+.cert-grid.list-view .card-body{padding:16px 18px}
+
+/* thumb */
 .card-thumb{height:155px;display:flex;align-items:center;justify-content:center;font-size:54px;position:relative;overflow:hidden}
-.card-thumb-bg{position:absolute;inset:0;opacity:.1}
-.badge-new{position:absolute;top:10px;right:10px;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.05em;z-index:1}
-.badge-soon{position:absolute;top:10px;right:10px;background:#999;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;z-index:1}
-.badge-expiry-thumb{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:3px 9px;border-radius:20px;z-index:1;backdrop-filter:blur(4px)}
+.card-thumb-bg{position:absolute;inset:0;opacity:.1;transition:opacity var(--tr)}
+.cert-card.can-open:hover .card-thumb-bg{opacity:.16}
+.thumb-emoji{position:relative;z-index:1;transition:transform var(--tr);display:block;line-height:1}
+.cert-card.can-open:hover .thumb-emoji{transform:scale(1.12) rotate(-4deg)}
+.thumb-img-wrap{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:12px}
+.thumb-img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:8px;transition:transform var(--tr)}
+.cert-card.can-open:hover .thumb-img{transform:scale(1.07)}
+
+/* badges */
+.badge-new{position:absolute;top:10px;right:10px;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.05em;z-index:2;box-shadow:0 2px 6px rgba(209,16,0,.35)}
+.badge-soon{position:absolute;top:10px;right:10px;background:#9ca3af;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;z-index:2}
+.badge-expiry-thumb{position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;padding:3px 9px;border-radius:20px;z-index:2;backdrop-filter:blur(4px)}
+
+/* body */
 .card-body{padding:18px 18px 16px;flex:1;display:flex;flex-direction:column}
-.card-title{font-size:15px;font-weight:700;margin-bottom:3px}
+.card-title{font-size:15px;font-weight:700;margin-bottom:3px;color:var(--text)}
 .card-title-en{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:10px}
 .card-desc{font-size:12px;color:var(--muted);line-height:1.65;flex:1}
 .expiry-row{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
 .expiry-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .expiry-dot.ok{background:#1a7a4a}.expiry-dot.warn{background:#f59e0b}.expiry-dot.dead{background:#ef4444}
 .card-footer{margin-top:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.card-org{font-size:11px;color:var(--muted)}
-.btn-go{padding:7px 15px;border:none;border-radius:8px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap}
-.btn-go.open{background:var(--dark);color:#fff}.btn-go.open:hover{background:#111820}
-.btn-go.locked{background:#e8e6e0;color:#aaa;cursor:not-allowed}
+.card-org{font-size:11px;color:var(--muted2)}
+.btn-go{
+  padding:7px 15px;border:none;border-radius:8px;
+  font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;
+  transition:all var(--tr);display:flex;align-items:center;gap:5px;white-space:nowrap;
+}
+.btn-go.open{background:var(--dark);color:#fff;box-shadow:0 2px 8px rgba(30,37,51,.2)}
+.btn-go.open:hover{background:#111820;box-shadow:0 4px 14px rgba(30,37,51,.3);transform:translateY(-1px)}
+.btn-go.open:active{transform:scale(.94)}
+.btn-go.locked{background:#ece9e3;color:#aaa;cursor:not-allowed;border:1.5px solid var(--border)}
+
+/* highlight */
+.hl{background:#fef08a;border-radius:3px;padding:0 1px}
+
+/* ripple */
+.ripple{
+  position:absolute;border-radius:50%;
+  background:rgba(30,37,51,.1);
+  transform:scale(0);animation:rippleA .55s linear;
+  pointer-events:none;z-index:10;
+}
+@keyframes rippleA{to{transform:scale(4);opacity:0}}
+
+/* ── SKELETON ── */
 .skel-card{background:var(--card);border-radius:var(--radius);border:1.5px solid var(--border);overflow:hidden;animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
 .skel-thumb{height:155px;background:#e8e6e0}
 .skel-body{padding:18px}
 .skel-line{height:12px;background:#e8e6e0;border-radius:6px;margin-bottom:10px}
 .w80{width:80%}.w60{width:60%}.w40{width:40%}
+
+/* ── EMPTY ── */
 .empty-msg{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)}
 .empty-msg .icon{font-size:46px;margin-bottom:14px}
 .empty-msg h3{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
-footer{background:var(--dark);padding:18px 40px;text-align:center;font-size:11px;color:rgba(255,255,255,.28)}
-@media(max-width:680px){.hero{padding:36px 20px 32px}.hero h2{font-size:26px}main{padding:24px 16px}header{padding:0 16px}.hero-stats{gap:0}.stat{padding:0 16px}}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--dark);color:#fff;
+  padding:10px 22px;border-radius:10px;
+  font-size:13px;font-weight:500;z-index:9999;pointer-events:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+  transition:transform .28s cubic-bezier(.34,1.56,.64,1),opacity .28s;
+  opacity:0;
+}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ── BACK TO TOP ── */
+#backTop{
+  position:fixed;bottom:24px;right:24px;
+  width:40px;height:40px;border-radius:11px;
+  background:var(--dark);color:#fff;border:none;
+  font-size:17px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,.18);
+  opacity:0;pointer-events:none;transition:all var(--tr);z-index:200;
+}
+#backTop.show{opacity:1;pointer-events:auto}
+#backTop:hover{background:#111820;transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.28)}
+#backTop:active{transform:scale(.9)}
+
+/* ── FOOTER ── */
+footer{
+  background:#fff;border-top:1.5px solid var(--border);
+  padding:18px 40px;text-align:center;
+  font-size:11px;color:var(--muted);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px){
+  header{padding:0 16px}
+  .hero{padding:36px 20px 32px}.hero h2{font-size:26px}
+  .search-wrap{padding:10px 16px}
+  main{padding:20px 16px}
+  footer{padding:14px 16px}
+  .stat{padding:0 16px}
+  .toolbar{flex-direction:column;align-items:flex-start}
+  .cert-grid.list-view .cert-card{flex-direction:column}
+  .cert-grid.list-view .card-thumb{width:100%;height:120px}
+}
 </style>
 </head>
 <body>
+
+<!-- HEADER -->
 <header>
   <div class="header-left">
     <div class="logo-mark">N</div>
@@ -78,34 +299,76 @@ footer{background:var(--dark);padding:18px 40px;text-align:center;font-size:11px
       <p id="siteTagline">Certificate Issuance System</p>
     </div>
   </div>
-  <div class="header-right" id="headerOrg"></div>
+  <div class="header-actions">
+    <div class="header-right" id="headerOrg"></div>
+    <button class="btn-icon" title="Làm mới dữ liệu" onclick="refreshData()">↺</button>
+    <button class="btn-icon" title="Sao chép đường dẫn (Ctrl+C)" onclick="copyLink()">🔗</button>
+  </div>
 </header>
 
+<!-- HERO -->
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-badge" id="heroBadge">NTZ CREATOR · CERTIFICATE SYSTEM</div>
     <h2>Hệ thống cấp phát<br><span>Chứng chỉ Trực tuyến</span></h2>
     <p id="heroDesc">Đang tải thông tin...</p>
     <div class="hero-stats">
-      <div class="stat"><div class="num" id="statTotal">—</div><div class="lbl">Loại chứng chỉ</div></div>
-      <div class="stat"><div class="num" id="statActive">—</div><div class="lbl">Hoạt động</div></div>
-      <div class="stat"><div class="num" id="statNew">—</div><div class="lbl">Mới thêm</div></div>
+      <div class="stat" onclick="applyFilter('all')" title="Xem tất cả">
+        <div class="num" id="statTotal">—</div><div class="lbl">Loại chứng chỉ</div>
+      </div>
+      <div class="stat" onclick="applyFilter('active')" title="Xem đang hoạt động">
+        <div class="num" id="statActive">—</div><div class="lbl">Hoạt động</div>
+      </div>
+      <div class="stat" onclick="applyFilter('new')" title="Xem mới thêm">
+        <div class="num" id="statNew">—</div><div class="lbl">Mới thêm</div>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- SEARCH BAR -->
+<div class="search-wrap">
+  <div class="search-inner">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" type="text"
+             placeholder="Tìm kiếm chứng chỉ... (Ctrl+K)"
+             oninput="onSearch(this.value)" autocomplete="off">
+      <span class="search-kbd" id="searchKbd">Ctrl K</span>
+      <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+    </div>
+    <div class="search-count" id="searchCount"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
 <main>
   <div class="section-header">
     <div>
       <div class="section-title">Danh sách chứng chỉ</div>
       <div class="section-sub" id="sectionSub">Đang tải...</div>
     </div>
-    <div class="filter-tabs">
-      <button class="tab active" onclick="filterCards(this,'all')">Tất cả</button>
-      <button class="tab" onclick="filterCards(this,'active')">Hoạt động</button>
-      <button class="tab" onclick="filterCards(this,'new')">Mới</button>
+    <div class="toolbar">
+      <div class="filter-tabs">
+        <button class="tab active" data-f="all"    onclick="applyFilter('all',this)">Tất cả</button>
+        <button class="tab"        data-f="active"  onclick="applyFilter('active',this)">Hoạt động</button>
+        <button class="tab"        data-f="new"     onclick="applyFilter('new',this)">Mới</button>
+      </div>
+      <div class="toolbar-sep"></div>
+      <select class="sort-select" onchange="applySort(this.value)">
+        <option value="default">Mặc định</option>
+        <option value="name_az">Tên A → Z</option>
+        <option value="name_za">Tên Z → A</option>
+        <option value="expiry">Gần hết hạn trước</option>
+      </select>
+      <div class="toolbar-sep"></div>
+      <div class="view-btns">
+        <button class="view-btn active" id="btnGrid" onclick="setView('grid')" title="Xem lưới">⊞</button>
+        <button class="view-btn"        id="btnList" onclick="setView('list')" title="Xem danh sách">☰</button>
+      </div>
     </div>
   </div>
+
   <div class="cert-grid" id="certGrid">
     <div class="skel-card"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
     <div class="skel-card"><div class="skel-thumb"></div><div class="skel-body"><div class="skel-line w80"></div><div class="skel-line w60"></div><div class="skel-line w40"></div></div></div>
@@ -114,9 +377,12 @@ footer{background:var(--dark);padding:18px 40px;text-align:center;font-size:11px
 </main>
 
 <footer id="siteFooter">© NTZ Creator</footer>
+<div id="toast"></div>
+<button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Lên đầu">↑</button>
 
 <script>
 let allCerts=[], siteOrg='Cao Đẳng Đồng Tháp';
+let currentFilter='all', currentSort='default', currentSearch='', currentView='grid';
 
 function expiryInfo(str){
   if(!str)return{cls:'ok',label:'Không giới hạn',active:true};
@@ -126,49 +392,184 @@ function expiryInfo(str){
   return{cls:'ok',label:`HSD: ${new Date(str).toLocaleDateString('vi-VN')}`,active:true};
 }
 
-function renderCard(c){
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function highlight(text,q){
+  if(!q)return esc(text);
+  const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+  return esc(text).replace(re,'<span class="hl">$1</span>');
+}
+
+function renderThumb(c){
+  if(c.image){
+    const ws=c.imageSize?.width?`width:${c.imageSize.width}px;`:'';
+    const hs=c.imageSize?.height?`height:${c.imageSize.height}px;`:'';
+    const sty=`style="${ws}${hs}max-width:100%;max-height:100%;"`;
+    return `<div class="thumb-img-wrap">
+      <img class="thumb-img" src="${esc(c.image)}" alt="${esc(c.title)}" ${sty} loading="lazy"
+           onerror="this.parentNode.innerHTML='<span class=\\"thumb-emoji\\" style=\\"font-size:54px;position:relative;z-index:1\\">${c.badge||'📄'}</span>'">
+    </div>`;
+  }
+  return `<span class="thumb-emoji">${c.badge||'📄'}</span>`;
+}
+
+function renderCard(c,q=''){
   const exp=expiryInfo(c.accessExpiry);
   const canOpen=!!c.url&&exp.active;
-  const badgeHtml=c.isNew?'<div class="badge-new">NEW</div>':(!c.url?'<div class="badge-soon">COMING SOON</div>':'');
+  const badge=c.isNew?'<div class="badge-new">NEW</div>':(!c.url?'<div class="badge-soon">COMING SOON</div>':'');
   const expThumb=c.accessExpiry?`<div class="badge-expiry-thumb">⏱ ${exp.label}</div>`:'';
   const expiryRow=c.accessExpiry?`<div class="expiry-row"><div class="expiry-dot ${exp.cls}"></div><span>${exp.label}</span></div>`:'';
   const btn=canOpen
-    ?`<button class="btn-go open" onclick="event.stopPropagation();go('${c.url}')">Tạo ngay →</button>`
+    ?`<button class="btn-go open" onclick="event.stopPropagation();go('${esc(c.url)}')">Tạo ngay →</button>`
     :`<button class="btn-go locked">${exp.active===false?'🔒 Hết hạn':'🔜 Sắp ra mắt'}</button>`;
   return `
-  <div class="cert-card ${canOpen?'can-open':''}" onclick="${canOpen?`go('${c.url}')`:''}" data-new="${c.isNew}" data-active="${canOpen}">
-    <div class="card-thumb" style="background:${c.color}15">
-      <div class="card-thumb-bg" style="background:${c.color}"></div>
-      <span style="position:relative;z-index:1">${c.badge}</span>
-      ${badgeHtml}${expThumb}
+  <div class="cert-card ${canOpen?'can-open':''}" onclick="${canOpen?`go('${esc(c.url)}')`:''}" data-new="${c.isNew}" data-active="${canOpen}">
+    <div class="card-thumb" style="background:${c.color||'#999'}15">
+      <div class="card-thumb-bg" style="background:${c.color||'#999'}"></div>
+      ${renderThumb(c)}
+      ${badge}${expThumb}
     </div>
     <div class="card-body">
-      <div class="card-title">${c.title}</div>
-      <div class="card-title-en">${c.titleEn}</div>
-      <div class="card-desc">${c.description}</div>
+      <div class="card-title">${highlight(c.title,q)}</div>
+      <div class="card-title-en">${esc(c.titleEn||'')}</div>
+      <div class="card-desc">${highlight(c.description,q)}</div>
       ${expiryRow}
-      <div class="card-footer">
-        <div class="card-org">${siteOrg}</div>
-        ${btn}
-      </div>
+      <div class="card-footer"><div class="card-org">${esc(siteOrg)}</div>${btn}</div>
     </div>
   </div>`;
 }
 
-function filterCards(btn,f){
+function getList(){
+  let list=[...allCerts];
+  if(currentFilter==='active')list=list.filter(c=>c.url&&expiryInfo(c.accessExpiry).active);
+  if(currentFilter==='new')list=list.filter(c=>c.isNew);
+  const q=currentSearch.toLowerCase().trim();
+  if(q)list=list.filter(c=>
+    c.title.toLowerCase().includes(q)||(c.titleEn||'').toLowerCase().includes(q)||c.description.toLowerCase().includes(q)
+  );
+  if(currentSort==='name_az')list.sort((a,b)=>a.title.localeCompare(b.title,'vi'));
+  if(currentSort==='name_za')list.sort((a,b)=>b.title.localeCompare(a.title,'vi'));
+  if(currentSort==='expiry')list.sort((a,b)=>{
+    const da=a.accessExpiry?new Date(a.accessExpiry):new Date('2099-01-01');
+    const db=b.accessExpiry?new Date(b.accessExpiry):new Date('2099-01-01');
+    return da-db;
+  });
+  return{list,q};
+}
+
+function renderGrid(){
+  const {list,q}=getList();
+  const countEl=document.getElementById('searchCount');
+  const kbdEl=document.getElementById('searchKbd');
+  if(q){
+    countEl.textContent=`${list.length} kết quả`;
+    countEl.style.display='block';
+    if(kbdEl)kbdEl.style.display='none';
+  }else{
+    countEl.style.display='none';
+    if(kbdEl)kbdEl.style.display='';
+  }
+  const grid=document.getElementById('certGrid');
+  if(!list.length){
+    grid.innerHTML=`<div class="empty-msg"><div class="icon">${q?'🔍':'📭'}</div>
+      <h3>${q?'Không tìm thấy kết quả':'Không có chứng chỉ'}</h3>
+      <p>${q?`Thử từ khóa khác cho "<strong>${esc(currentSearch)}</strong>"`:''}</p></div>`;
+    return;
+  }
+  grid.innerHTML=list.map(c=>renderCard(c,q)).join('');
+  addRipple();
+}
+
+function applyFilter(f,btn){
+  currentFilter=f;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  let list=allCerts;
-  if(f==='active')list=allCerts.filter(c=>c.url&&expiryInfo(c.accessExpiry).active);
-  if(f==='new')list=allCerts.filter(c=>c.isNew);
-  document.getElementById('certGrid').innerHTML=list.length
-    ?list.map(renderCard).join('')
-    :`<div class="empty-msg"><div class="icon">🔍</div><h3>Không có kết quả</h3><p>Không tìm thấy chứng chỉ phù hợp.</p></div>`;
+  const target=btn||document.querySelector(`.tab[data-f="${f}"]`);
+  if(target)target.classList.add('active');
+  renderGrid();
+}
+
+function applySort(v){currentSort=v;renderGrid();}
+
+function onSearch(val){
+  currentSearch=val;
+  const cl=document.getElementById('searchClear').classList;
+  const kl=document.getElementById('searchKbd');
+  cl.toggle('show',val.length>0);
+  if(kl)kl.style.display=val.length>0?'none':'';
+  renderGrid();
+}
+
+function clearSearch(){
+  currentSearch='';
+  document.getElementById('searchInput').value='';
+  document.getElementById('searchClear').classList.remove('show');
+  document.getElementById('searchCount').style.display='none';
+  const kl=document.getElementById('searchKbd');
+  if(kl)kl.style.display='';
+  renderGrid();
+  document.getElementById('searchInput').focus();
+}
+
+function setView(v){
+  currentView=v;
+  document.getElementById('certGrid').classList.toggle('list-view',v==='list');
+  document.getElementById('btnGrid').classList.toggle('active',v==='grid');
+  document.getElementById('btnList').classList.toggle('active',v==='list');
 }
 
 function go(url){window.location.href=url;}
 
-async function init(){
+function addRipple(){
+  document.querySelectorAll('.cert-card.can-open').forEach(card=>{
+    card.addEventListener('mousedown',function(e){
+      const r=document.createElement('span');
+      r.classList.add('ripple');
+      const rect=this.getBoundingClientRect();
+      const size=Math.max(rect.width,rect.height);
+      r.style.cssText=`width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px`;
+      this.appendChild(r);
+      setTimeout(()=>r.remove(),600);
+    },{passive:true});
+  });
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+function copyLink(){
+  navigator.clipboard.writeText(location.href)
+    .then(()=>showToast('✅ Đã sao chép đường dẫn!'))
+    .catch(()=>showToast('❌ Không thể sao chép'));
+}
+
+async function refreshData(){
+  showToast('🔄 Đang làm mới...');
+  await init(true);
+}
+
+window.addEventListener('scroll',()=>{
+  document.getElementById('backTop').classList.toggle('show',scrollY>300);
+},{passive:true});
+
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){
+    e.preventDefault();
+    const inp=document.getElementById('searchInput');
+    inp.focus();inp.select();
+  }
+  if(e.key==='Escape'&&document.activeElement===document.getElementById('searchInput'))clearSearch();
+});
+
+function animNum(id,target){
+  const el=document.getElementById(id);
+  let cur=0;const step=Math.ceil(target/18)||1;
+  const iv=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=cur;if(cur>=target)clearInterval(iv);},40);
+}
+
+async function init(silent=false){
   try{
     const res=await fetch('config.json?t='+Date.now());
     if(!res.ok)throw new Error('HTTP '+res.status);
@@ -179,17 +580,18 @@ async function init(){
     document.getElementById('siteName').textContent=s.name;
     document.getElementById('siteTagline').textContent=s.tagline;
     document.getElementById('heroDesc').textContent=s.description;
-    document.getElementById('headerOrg').innerHTML=s.organization+'<br><span style="font-size:10px;opacity:.6">'+s.organizationVi+'</span>';
+    document.getElementById('headerOrg').innerHTML=`<strong>${esc(s.organization)}</strong><br><span style="font-size:10px;opacity:.7">${esc(s.organizationVi)}</span>`;
     document.getElementById('siteFooter').textContent=s.footerNote;
     document.getElementById('heroBadge').textContent=s.name.toUpperCase()+' · CERTIFICATE SYSTEM';
     allCerts=cfg.certificates;
     const active=allCerts.filter(c=>c.url&&expiryInfo(c.accessExpiry).active);
     const newOnes=allCerts.filter(c=>c.isNew);
-    document.getElementById('statTotal').textContent=allCerts.length;
-    document.getElementById('statActive').textContent=active.length;
-    document.getElementById('statNew').textContent=newOnes.length;
+    animNum('statTotal',allCerts.length);
+    animNum('statActive',active.length);
+    animNum('statNew',newOnes.length);
     document.getElementById('sectionSub').textContent=`${allCerts.length} loại chứng chỉ · ${active.length} đang hoạt động`;
-    document.getElementById('certGrid').innerHTML=allCerts.map(renderCard).join('');
+    renderGrid();
+    if(silent)showToast('✅ Đã cập nhật dữ liệu!');
   }catch(e){
     document.getElementById('certGrid').innerHTML=`<div class="empty-msg"><div class="icon">⚠️</div><h3>Không tải được danh sách</h3><p>Đảm bảo file <code>config.json</code> nằm cùng thư mục.<br><small>${e.message}</small></p></div>`;
   }

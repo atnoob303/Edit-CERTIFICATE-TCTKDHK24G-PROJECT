@@ -407,7 +407,7 @@ header{
   <div class="hero-grid"></div>
   <div class="hero-inner">
     <div class="hero-text">
-      <div class="hero-badge">✦ Save the Children · TKDHK24G</div>
+      <div class="hero-badge">✦ Save the Children · By @ Trần Đại Dũng</div>
       <h2>Cấp phát <span>Chứng chỉ</span><br>Hoàn thành Khóa học</h2>
       <p>Nhập tên người nhận · Chọn ngày cấp · Xem trước trực tiếp · Tải về PDF hoặc PNG</p>
     </div>
@@ -497,9 +497,11 @@ header{
     <div class="card">
       <div class="card-body-pad" style="padding:14px 18px">
         <div style="font-size:11px;color:var(--muted);line-height:1.8">
-          <div style="font-weight:700;color:var(--text2);margin-bottom:6px;font-size:11.5px">ℹ️ Hướng dẫn</div>
-          Đặt file <code style="background:var(--bg);padding:1px 5px;border-radius:4px;font-size:10.5px">pdf_b64.txt</code> và <code style="background:var(--bg);padding:1px 5px;border-radius:4px;font-size:10.5px">font_b64.txt</code> cùng thư mục với file HTML này.<br><br>
-          Hệ thống sẽ tự động tải khi mở trang.
+          <div style="font-weight:700;color:var(--text2);margin-bottom:6px;font-size:11.5px">ℹ️ Hướng dẫn sử dụng</div>
+          1️⃣ Nhập <b>họ và tên</b> đầy đủ vào ô bên trên.<br><br>
+          2️⃣ Chọn <b>ngày cấp</b> chứng chỉ (mặc định là hôm nay).<br><br>
+          3️⃣ Bấm <b>Xem trước PDF</b> để kiểm tra chứng chỉ.<br><br>
+          4️⃣ Bấm <b>Tải về PDF</b> hoặc <b>Tải về PNG</b> để lưu về máy.
         </div>
       </div>
     </div>
@@ -642,9 +644,9 @@ async function buildPdf() {
     fontSize--;
   }
   const textW = customFont.widthOfTextAtSize(name, fontSize);
-  const startX = NAME_ZONE.x + (NAME_ZONE.w - textW) / 2;
+  const startX = (NAME_ZONE.x + NAME_ZONE.x + NAME_ZONE.w) / 2 - textW / 2;
 
-  page.drawText(name, { x: startX, y: NAME_ZONE.y, font: customFont, size: fontSize, color: nameColor });
+  page.drawText(name, { x: startX, y: 403, font: customFont, size: fontSize, color: nameColor });
   page.drawText(makeDateStr(dateStr), { x: DATE_X, y: DATE_Y, font: helvetica, size: 25, color: rgb(0,0,0) });
 
   return await pdfDoc.save();

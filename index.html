@@ -652,7 +652,7 @@ function renderCard(c, q=''){
   // has release date and not yet released
   const hasCd    = rel && !rel.released;
   // can open: has url AND (no releaseDate OR already released) AND access not expired
-  const canOpen  = !!c.url && (!rel || rel.released) && exp.active;
+  const canOpen  = !!c.url && exp.active;
   // soon-dated: soon=true AND has releaseDate not yet passed (hover enabled)
   const soonDated = isSoon && hasCd;
   const locked   = !canOpen;

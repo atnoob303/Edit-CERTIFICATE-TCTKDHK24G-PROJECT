@@ -10,13 +10,13 @@
   "certificates": [
     {
       "id": "skill-to-succeed",
-      "title": "Kỹ năng Thành công",
-      "titleEn": "Skill to Succeed",
+      "title": "KỸ NĂNG THÀNH CÔNG",
+      "titleEn": "SKILL TO SUCCED",
       "description": "Chứng chỉ hoàn thành khóa đào tạo trực tuyến về kỹ năng mềm, tư duy tích cực và phát triển bản thân.",
       "badge": "🏆",
       "color": "#D11000",
-      "isNew": false,
-      "accessExpiry": null,
+      "isNew": true,
+      "accessExpiry": "2026-05-30",
       "url": "https://atnoob303.github.io/Edit-CERTIFICATE-TCTKDHK24G-PROJECT/Skilltosucceed"
     },
     {
@@ -26,8 +26,8 @@
       "description": "Chứng chỉ hoàn thành khóa đào tạo kỹ năng công nghệ số, sử dụng công cụ kỹ thuật số trong công việc.",
       "badge": "💻",
       "color": "#1a6fc4",
-      "isNew": true,
-      "accessExpiry": "2025-12-31",
+      "isNew": false,
+      "accessExpiry": null,
       "url": null
     },
     {
@@ -37,8 +37,8 @@
       "description": "Chứng chỉ hoàn thành khóa học kỹ năng lãnh đạo, quản lý nhóm và ra quyết định hiệu quả.",
       "badge": "🌟",
       "color": "#2e7d32",
-      "isNew": true,
-      "accessExpiry": "2026-06-30",
+      "isNew": false,
+      "accessExpiry": null,
       "url": null
     },
     {
